@@ -1,0 +1,72 @@
+<style>
+
+</style>
+<div id="messTitle"><span>添加用户</span><img src="static/img/close1.png"></div>
+<form id="registerForm">
+  <div id="txt">
+    {% for field in registerForm %}
+      <div class="low">
+        <div class="label">{{ field.label_tag }}</div>
+        {{ field }}
+      </div>
+      <div class="error" id="register_error_{{forloop.counter}}">
+        {{ field.errors }}
+      </div>
+      {% if forloop.counter == 4 %}
+        <div class="low">
+          <div class="label">密保问题</div>
+          <select id="selectBox">
+            {% for q in question %}
+              <option value="{{forloop.counter}}">{{q}}</option>
+            {% endfor %}
+          </select>
+        </div>
+        <div class="error" id="register_error_select">
+          {{ field.errors }}
+        </div>
+      {% endif %}
+    {% endfor %}
+  </div>
+  <div id="sendBox">
+    <input id="no" value="取消" type="button">
+    <input id="ok" value="添加" type="button">
+  </div>
+</form>
+<script>
+  $(".window").css("width", "460px");
+  $("#messTitle").css("width", "435px");
+  $("#no").button();
+  $("#ok").button();
+  $("#messTitle img").mouseleave(function(){
+    $("#messTitle img").attr("src", "static/img/close1.png");
+  });
+  $("#messTitle img").mouseover(function(){
+    $("#messTitle img").attr("src", "static/img/close2.png");
+  });
+  $("#no").click(function(){
+    $(".window").hide("slow");
+  });
+  $("#ok").click(function(){
+    $.ajax({
+      cache: false,
+      type: "POST",
+      url: "addUser",
+      data: $('#registerForm').serialize() + "&type=sendForm&selectVal=" + $("#selectBox").val().toString(),
+      async: false,
+      error: function (request) {
+        debug_print('加载失败');
+      },
+      success: function (data) {
+        var jsonObj = JSON.parse(data);
+            if (jsonObj.Success){
+                //申请成功， 跳转网页
+                getPage("userManagement");
+                $(".window").hide();
+            }else{
+                //否则显示错误信息
+                alert("失败");
+            }
+      }
+    });
+  });
+</script>

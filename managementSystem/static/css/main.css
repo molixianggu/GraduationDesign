@@ -1,0 +1,195 @@
+body{
+    margin: 0px;
+}
+a:link{
+    text-decoration: none;
+}
+a:visited{
+    text-decoration: none;
+}
+a:hover{
+    text-decoration: none;
+}
+a:active{
+    text-decoration: none;
+}
+
+
+.ui-menu{
+    background-color: #f6f6f6;
+    width: 85%;
+    float: left;
+}
+
+.ui-menu:after {
+    content: ".";
+    display: block;
+    clear: both;
+    visibility: hidden;
+    line-height: 0;
+    height: 0;
+}
+.ui-menu .ui-menu-item {
+    display: inline-block;
+    float: left;
+    padding: 20px 20px;
+    width: 75px;
+}
+.ui-menu .ui-menu-item a{
+    color: #000000;
+}
+.window{
+    width:250px;
+    background-color:#d0def0;
+    position:absolute;
+    padding:2px;
+    margin:5px;
+    display:none;
+}
+
+#hioc{
+    background-color: #b3d4fc;
+}
+
+
+#myHead{
+    width: 100%;
+    min-width: 680px;
+    background-color: #f6f6f6;
+    float: left;
+    position: fixed;
+    z-index:9;
+    top: 0px;
+}
+#loginBox{
+    margin-top: 40px;
+}
+#loginBox a{
+    padding-left: 5px;
+    padding-right: 10px;
+    float: left;
+    display: inline-block;
+}
+#loginBox a:hover{
+    color: #003eff;
+}
+.rb1{
+    margin: 0px 12px;
+}
+
+
+.mybody{
+    width: 80%;
+    min-width: 920px;
+    margin: auto;
+    background-color: #ffffff;
+    height: 1200px
+}
+
+#selfinf{
+    padding: 20px;
+    width: 65%;
+    /*height: 700px;*/
+    /*background-color: #007fff;*/
+    float: left;
+}
+#trends{
+    padding: 18px;
+    margin: 9px;
+    width: 20%;
+    height: 90%;
+    float: right;
+    border: outset;
+}
+#font{
+    margin-top: 25px;
+    width: 100%;
+    height: 60px;
+    background-color: #222222;
+
+}
+.title{
+    font-weight: bold;
+    font-size: 25px;
+}
+#selfinf p{
+    text-indent: 2em;
+    font-size: 24px;
+    margin-left: 30px;
+}
+
+#photo{
+    width: 23%;
+    height: auto;
+    float: left;
+    margin-top: 50px;
+    margin-bottom: 120px;
+    border: outset;
+    border-color: #666666;
+}
+
+#shorttxt{
+    width: 75%;
+    float: left;
+}
+#Mess{
+    padding-top:1%;
+    height: 75%;
+    width:50%;
+}
+
+#Mess li{
+    border: outset;
+    width: 80%;
+    height: 30px;
+    margin: 5px;
+    border-color: #0322fc;
+}
+
+#editor_id{
+    width:80%;
+    height:240px;
+    float: left;
+}
+
+#but{
+    float:left;
+    width: 80px;
+    height: 22px;
+    margin-right: 80px;
+}
+#send{
+    background-color:#666666;
+    padding: 20px;
+    padding-left: 0px;
+}
+#send span{
+    font-size: 21px;
+}
+.login_none{
+    border: outset;
+    border-color: #666666;
+    text-align:center;
+}
+#logins{
+    background-color: #999999;
+    padding: 5px;
+}
+
+.login_box input{
+    width: 85%;
+}
+.login_but{
+    width: 75%;
+    margin-left: 30%;
+}
+.errormess{
+    font-size: 8px;
+    color: #ff0000;
+    height: 12px;
+}
+
+#trends li{
+    margin-top: 20px;
+    /*background-color: #000088;*/
+}

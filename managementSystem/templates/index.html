@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html>
+
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>电气设备管理系统控制台</title>
+    <link id="html_icon" rel="apple-touch-icon" href="">
+
+    <link rel="stylesheet" href="/static/js/jquery/jquery-ui-1.11.4.custom/jquery-ui.css">
+    <link rel="stylesheet" href="/static/js/jquery/jquery-ui-1.11.4.custom/jquery-ui.structure.css">
+    <link rel="stylesheet" href="/static/js/jquery/jquery-ui-1.11.4.custom/jquery-ui.theme.css">
+    <link rel="stylesheet" href="/static/css/basic.css">
+    <link rel="stylesheet" href="/static/css/head.css">
+    <link rel="stylesheet" href="/static/css/body.css">
+    <link rel="stylesheet" href="/static/css/font.css">
+    <link rel="stylesheet" href="/static/css/window.css">
+
+    <script src="/static/js/jquery/jquery-1.11.3.js"></script>
+    <script src="/static/js/jquery/jquery-ui-1.11.4.custom/jquery-ui.js"></script>
+    <script src="/static/js/json.js"></script>
+    <script src="/static/js/jquery/jquery.cookie.js"></script>
+    <script src="/static/js/md5.js"></script>
+    <script src="/static/js/head.js"></script>
+    <script src="/static/js/body.js"></script>
+    <script src="/static/js/window.js"></script>
+</head>
+<body>
+    <!--[if lt IE 8]>
+    <p>你在使用一个过时的浏览器.请升级浏览器来继续浏览该网页</p>
+    <![endif]-->
+    <div id="head_menu">
+        <div id="box_a">
+          <img id="main_ico" src="static/img/head.ico" />
+        </div>
+          <div id="loginBox">
+
+            <span>你好，admin </span><img id="put_but" src="static/img/back_hover.png">
+            <div id="downBox">
+              <ul>
+                <li>修改信息</li>
+                <li>管理密码</li>
+                <hr align="center" width="80%" />
+                <li id="close">注销</li>
+              </ul>
+            </div>
+          </div>
+          <div id="tool_Box">
+            <img title="后台主页" id="getHome" src="static/img/home.png">
+            <img  title="锁屏" id="Lock" src="static/img/LOCK_hover.png">
+            <img title="注销" id="cancellation" src="static/img/quit.png">
+          </div>
+      </div>
+    </div>
+    <div id="my_body">
+      <div id="leftBox">
+        <div id="but">
+        <div class="butBox">
+          <img src="static/img/add.png">
+          <span>添实验</span>
+        </div>
+        <div class="butBox">
+          <img src="static/img/look.png">
+          <span>查实验</span>
+        </div>
+        </div>
+        <hr align="center" width="80%" />
+        <div id="left_meun">
+          <ul>
+            <li class="par"><div>实验数据管理</div>
+              <ul class="sub_meun">
+                <li id="addReport">新建实验报告</li>
+                <li id="importReport">实验报告导入</li>
+                <li id="editReport">编辑实验报告</li>
+                <li>实验报告存档</li>
+                <li>实验报告导出</li>
+                <li>审核实验报告</li>
+                <li>删除实验报告</li>
+                <li>检索实验报告</li>
+              </ul>
+            </li>
+            <li class="par"><div>设备库管理</div>
+              <ul class="sub_meun">
+                <li>添加设备</li>
+                <li>设备检索</li>
+                <li>设备下线</li>
+                <li>浏览设备信息</li>
+                <li>编辑设备信息</li>
+                <li>查看设备历史</li>
+                <li>设备诊断库配置</li>
+              </ul>
+            </li>
+            <li class="par"><div>设备类型管理</div>
+              <ul class="sub_meun">
+                <li>新建设备类型</li>
+                <li>设备类型检索</li>
+                <li>编辑设备类型</li>
+                <li>删除设备类型</li>
+                <li>设备类型诊断库配置</li>
+                <li>配置下发</li>
+                <li>导出设备系统报表</li>
+              </ul>
+            </li>
+            <li class="par"><div>变配电所管理</div>
+              <ul class="sub_meun">
+                <li>变配电所检索</li>
+                <li>新增变配电所</li>
+                <li>编辑变配电所信息</li>
+                <li>删除变配电所</li>
+                <li>更改变配电所状态</li>
+              </ul>
+            </li>
+            <li class="par"><div>系统管理</div>
+              <ul class="sub_meun">
+                <li id="userManagement">用户管理</li>
+                <li>角色管理</li>
+                <li>权限管理</li>
+                <li>菜单管理</li>
+                <li>日志管理</li>
+                <li>参数设置</li>
+                <li>数据管理</li>
+                <!--数据备份 数据恢复 数据库表单设计修改-->
+                <li>功能模块管理</li>
+                <!--数据导入模板管理 数据分析模块管理-->
+                <li>系统安全</li>
+              </ul>
+            </li>
+            <li class="par"><div>帮助与更新</div>
+              <ul class="sub_meun">
+                <li>系统更新</li>
+                <li>BOM检测</li>
+                <li>系统帮助</li>
+              </ul>
+            </li>
+          </ul>
+        </div>
+      </div>
+      <div id="rightBox">
+        加载中....
+      </div>
+    </div>
+    <div id="messBox" class="window"></div>
+    <img id="bg-img" src="static/img/login-bag.png"/>
+    <div id="pass-Lock">
+      <div>password:</div>
+      <input type="password">
+    </div>
+</body>
+</html>

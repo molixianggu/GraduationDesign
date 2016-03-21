@@ -1,0 +1,11 @@
+#my_font{
+    width: 100%;
+    height: 60px;
+    border: outset;
+    background-color: #aaaaaa;
+    /*border-color: #aaaaaa;*/
+    /*background-color: #f6f6f6;*/
+    /*position: fixed;*/
+    /*z-index:9;*/
+    /*bottom: 0px;*/
+}

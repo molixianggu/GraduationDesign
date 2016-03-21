@@ -1,0 +1,16 @@
+#reg_Head{
+    text-align:center;
+    font-size: 30px;
+
+}
+#reg_Box{
+    width: 25%;
+    margin: auto;
+}
+
+
+#errormess{
+    font-size: 8px;
+    color: #ff0000;
+    height: 12px;
+}

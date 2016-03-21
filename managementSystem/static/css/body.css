@@ -1,0 +1,116 @@
+#my_body{
+    width: 100%;
+    height: 560px;
+    margin-top: 69px;
+}
+#leftBox{
+  float: left;
+  width: 20%;
+  height: 100%;
+  margin: 0px;
+  background-color: #F0F0F0;
+
+}
+#but{
+  width: 100%;
+  height: 35px;
+}
+.butBox{
+  float: left;
+  margin: 10px;
+}
+.butBox span{
+  color: #666666;
+}
+#left_meun{
+  width: 100%;
+}
+#left_meun ul{
+  padding-left: 5px;
+}
+#left_meun li{
+  list-style-type:none;
+}
+#left_meun div{
+  margin: 2px;
+  padding: 10px;
+  border:2px solid #ffffff;
+  border-radius: 5px;
+}
+#left_meun div:hover{
+  background-color: #a6a6a6;
+}
+.sub_meun li{
+  display: none;
+  color: #4a4a4a;
+  font-size: 18px;
+  padding: 2px;
+}
+.sub_meun li:hover{
+  font-weight: bold;
+}
+#rightBox{
+  float: left;
+  height: 100%;
+  width: 80%;
+}
+#body_head{
+  height: 40px;
+  margin: 10px;
+}
+#body_head .title{
+  font-weight: bold;
+  font-size: 20px;
+  margin: auto 30px;
+}
+#body_head .ref{
+  float: right;
+  margin: auto 35px;
+  font-size: 15px;
+}
+.sub_title{
+  width: 45%;
+  height:200px;
+  float: left;
+  margin: 25px;
+}
+.more{
+  float: right;
+  margin: auto 15px;
+  font-size: 14px;
+}
+.t{
+  font-weight: bold;
+  margin: auto 5px;
+  font-size: 17px;
+}
+.b img{
+  width: 16px;
+}
+
+#system .main p{
+  width: 40%;
+  margin: 1% 5%;
+  float: left;
+}
+#team p{
+  margin: 15px 40px;
+
+}
+
+.my_list{
+  margin: 10px;
+}
+.my_list li{
+  width: 95%;
+  min-width: 600px;
+  height: 12px;
+  border: outset;
+  border-color: #eeeeee;
+  padding: 12px;
+  margin: auto 3px;
+  list-style-type:none;
+}
+.list_title{
+  font-weight: bold;
+}

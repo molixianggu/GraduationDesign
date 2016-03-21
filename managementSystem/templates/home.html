@@ -1,0 +1,60 @@
+<div id="body_head">
+  <span class="title">首页</span>
+  <span class="ref">刷新</span>
+</div>
+<div id="main">
+  <div class="sub_title">
+    <div id="quick">
+      <span class="t">快捷</span>
+      <span class="more">更多>></span>
+      <hr align="center" width="90%" />
+      <div class="main">
+        <div class="b"><img src="static/img/add_normal.png">
+          <span>新建实验</span>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="sub_title">
+    <div id="logs">
+      <span class="t">日志</span>
+      <span class="more">更多>></span>
+      <hr align="center" width="90%" />
+      <div class="main">
+        <ul>
+          {% for log in logs %}
+            <li>{{log.time}} [{{log.user.nickName}}]{{log.content}}</li>
+          {% endfor %}
+        </ul>
+      </div>
+    </div>
+  </div>
+  <div class="sub_title">
+    <div id="system">
+      <span class="t">系统</span>
+      <hr align="center" width="90%" />
+      <div class="main">
+        <p>服务器版本：0.0.2</p>
+        <p>编程语言：Python</p>
+        <p>服务器平台：阿里云</p>
+        <p>内存：820MB/1GB</p>
+      </div>
+    </div>
+  </div>
+  <div class="sub_title">
+    <div id="team">
+      <span class="t">团队</span>
+      <hr align="center" width="90%" />
+      <div class="main">
+        <p>后台企划：于硕</p>
+        <p>前台设计：于硕</p>
+        <p>测试运行：于硕</p>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+  function my_exit_(){
+    return true;
+  }
+</script>

@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+
+<head lang="en">
+  <meta charset="UTF-8">
+  <title>电气设备管理系统登录</title>
+  <link id="html_icon" rel="apple-touch-icon" href="">
+
+  <link rel="stylesheet" href="/static/js/jquery/jquery-ui-1.11.4.custom/jquery-ui.css">
+  <link rel="stylesheet" href="/static/js/jquery/jquery-ui-1.11.4.custom/jquery-ui.structure.css">
+  <link rel="stylesheet" href="/static/js/jquery/jquery-ui-1.11.4.custom/jquery-ui.theme.css">
+  <link rel="stylesheet" href="/static/css/basic.css">
+  <link rel="stylesheet" href="/static/css/loginBox.css">
+
+
+  <script src="/static/js/jquery/jquery-1.11.3.js"></script>
+  <script src="/static/js/jquery/jquery-ui-1.11.4.custom/jquery-ui.js"></script>
+  <script src="/static/js/json.js"></script>
+  <script src="/static/js/md5.js"></script>
+  <script src="/static/js/loginBox.js" ></script>
+</head>
+<body>
+<!--[if lt IE 8]>
+<p>你在使用一个过时的浏览器.请升级浏览器来继续浏览该网页</p>
+<![endif]-->
+
+  <div id="window">
+      <span>登录</span>
+      <hr align="center" width="80%" />
+    <div id="input_win">
+      <form id="login_form">
+        <div id="userName" class="inputBox"><div>用户名：</div><input value="" name="userName"></div>
+        <div id="passWord" class="inputBox"><div>密码：</div><input type="password" value="" name="passWord"></div>
+        <div id="Verification">
+          <select id="verSelect" name="selectBox">
+            <option value ="none">无安全问题</option>
+            <option value ="1">安全问题</option>
+            <option value ="2">手机验证</option>
+            <option value="3">邮箱验证</option>
+          </select>
+          <input id="verInput" name="ver_input" value="">
+        </div>
+      </form>
+    </div>
+    <input id="login_but" type="button" value="登录">
+  </div>
+  <div id="font">
+    &copy 2016-3-5 MG
+  </div>
+</body>
+</html>

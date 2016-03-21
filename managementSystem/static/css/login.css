@@ -1,0 +1,31 @@
+#Box{
+    width: 20%;
+    height: 400px;
+    margin: auto;
+    padding-top: 25%;
+    /*background-color: #000088;*/
+}
+
+.login_none{
+    border: outset;
+    border-color: #666666;
+    text-align:center;
+}
+
+#loginBox{
+    background-color: #999999;
+    padding: 5px;
+}
+
+.login_box input{
+    width: 85%;
+}
+#login_but{
+    margin-left: 50%;
+}
+
+#errormess{
+    font-size: 8px;
+    color: #ff0000;
+    height: 12px;
+}

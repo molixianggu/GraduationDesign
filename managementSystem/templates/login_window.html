@@ -1,0 +1,18 @@
+<div id="messTitle"><span>登录</span><img src="static/img/close.png"></div>
+<form id="loginForm">
+    <div id="txt">
+        {% for field in loginForm %}
+            <div class="low">
+                <div class="label">{{ field.label_tag }}</div>
+                {{ field }}
+            </div>
+            <div class="error" id="login_error_{{forloop.counter}}">
+                {{ field.errors }}
+            </div>
+        {% endfor %}
+    </div>
+    <div id="sendBox">
+        <input id="no" value="取消" type="button">
+        <input id="ok" value="登录" type="button">
+    </div>
+</form>

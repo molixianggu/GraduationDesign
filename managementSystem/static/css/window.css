@@ -1,0 +1,41 @@
+.window{
+    display: none;
+    width: 350px;
+    position: fixed;
+    z-index:9;
+    background-color: #eeeeff;
+    border: outset;
+    border-color: #eeeeee;
+}
+
+#messTitle{
+    height: 25px;
+    width: 324px;
+    text-align: center;
+    border: outset;
+    border-color: #eeeeee;
+    padding: 0px 10px;
+}
+#messTitle img{
+    float: right;
+    width: 30px;
+    height: 20px;
+}
+#txt .low{
+    margin: 15px;
+}
+
+#txt .low .label{
+    width: 28%;
+    float: left;
+}
+#txt .low input{
+    width: 60%;
+}
+#sendBox input{
+    margin: 3px 14%;
+}
+.error{
+    font-size: 12px;
+    color: #ff0000;
+}

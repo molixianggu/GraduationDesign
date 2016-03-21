@@ -1,0 +1,97 @@
+#head_menu{
+    height: 61px;
+    width: 100%;
+    float: left;
+    min-width: 810px;
+    margin: 0px;
+    border: outset;
+    border-color: #eeeeee;
+    background-color: #0077cc;
+    position: fixed;
+    z-index:7;
+    top: 0px;
+}
+#box_a{
+  float: left;
+  width: 60px;
+  height: 60px;
+}
+#head_menu #main_ico{
+  height: 55px;
+  width: 55px;
+}
+#head_menu #main_ico:hover{
+  width: 60px;
+  height: 60px;
+}
+
+#loginBox{
+    float: left;
+    margin: 0px 10px;
+  margin-top: 20px;
+  margin-right: 15px;
+}
+#loginBox img{
+    width: 20px;
+    height: 20px;
+    margin-left: 8px;
+    margin-top: 10px;
+  cursor: pointer;
+}
+#downBox{
+  width: 200px;
+  display: none;
+  border: outset;
+  border-color: #eeeeee;
+  background-color: #ffffff;
+  filter:alpha(opacity=70);
+  -moz-opacity:0.7;
+  -khtml-opacity: 0.7;
+  opacity: 0.7;
+}
+#downBox li{
+  cursor: pointer;
+  display:block;
+  list-style-type: none;
+  margin: 3px;
+}
+#downBox li:hover{
+  background-color: #a6a6a6;
+  font-weight: bold;
+}
+#loginBox span{
+    float: left;
+    color: #ffffff;
+    font-size: 30px;
+    cursor: pointer;
+}
+#tool_Box{
+  float: right;
+  margin-top: 30px;
+  margin-right: 45px;
+}
+#tool_Box img{
+  width: 25px;
+  height: 25px;
+  margin: 3px;
+}
+#bg-img{
+  position: fixed;
+  z-index:8;
+  top: 0px;
+  width: 100%;
+  height: 100%;
+  display: none;
+}
+#pass-Lock{
+  width: 250px;
+  position: fixed;
+  z-index:9;
+  display: none;
+  float: left;
+}
+#pass-Lock input{
+  background:transparent;
+  border:2px solid #ffffff;
+  border-radius: 5px;
+}

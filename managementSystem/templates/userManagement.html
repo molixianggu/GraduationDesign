@@ -1,0 +1,139 @@
+<style>
+  ._id{
+    width:7%;
+    float: left;
+  }
+  ._userName{
+    width:12%;
+    float: left;
+  }
+  ._group{
+    width:12%;
+    float: left;
+  }
+  ._time{
+    width:28%;
+    float: left;
+  }
+  ._ip{
+    width:15%;
+    float: left;
+  }
+   ._operation{
+     width:25%;
+     float: right;
+   }
+  ._operation span{
+    font-size: 15px;
+    color: #0000ee;
+    margin: auto 5px;
+    cursor: pointer;
+  }
+  #font_but{
+    width: 100%;
+  }
+  #font_but input{
+    margin: 15px 35px;
+    margin-left: 80%;
+  }
+</style>
+<div id="body_head">
+  <span class="title">用户管理</span>
+  <span class="ref">刷新</span>
+</div>
+<hr align="center" width="90%" />
+<div id="main">
+  <ul class="my_list">
+    <li>
+      <div class="list_title">
+        <div class="_id">ID</div>
+        <div class="_userName">用户名</div>
+        <div class="_group">管理组</div>
+        <div class="_time">登录时间</div>
+        <div class="_ip">登录IP</div>
+        <div class="_operation">操作</div>
+      </div>
+    </li>
+    {% for user in users %}
+      <li>
+        <div class="_id">{{user.id}}</div>
+        <div class="_userName">{{user.nickName}}</div>
+        <div class="_group">{{user.levelName}}</div>
+        <div class="_time">{{user.loginTime}}</div>
+        <div class="_ip">{{user.loginIP}}</div>
+        <div class="_operation"><span>审核</span>|<span>修改</span>|<span class="del">删除</span></div>
+      </li>
+    {% endfor %}
+  </ul>
+  <div id="font_but"><input type="button" value="添加用户"></div>
+</div>
+<script>
+  $("#font_but input").button();
+  function my_exit_(){
+    if ($(".window").css("display") != "none"){
+      if (confirm("确定要放弃添加这个用户吗?")){
+        $(".window").hide();
+        return true;
+      }else{
+        return false;
+      }
+    }
+    return true;
+  }
+  $("#font_but input").click(function(){
+    if ($(".window").css("display") == "none"){
+      $.ajax({
+        cache: false,
+        type: "POST",
+        url: "addUser",
+        data: "type=getForm",
+        async: false,
+        error: function (request) {
+          debug_print('加载失败');
+        },
+        success: function (data) {
+          $("#messBox").html(data);
+          popWindow();
+        }
+      });
+    }else{
+      $(".window").hide();
+    }
+  });
+  function getLocalTime(nS) {
+    return new Date(parseInt(nS) * 1000).toLocaleString().replace(/:\d{1,2}$/,' ');
+  }
+  var l = $("._time");
+  for (var i=1;i< l.length;i++){
+    nS = $(l[i]).text();
+    $(l[i]).text(getLocalTime(nS));
+  }
+  var del_button = $(".del");
+  for (var i=0;i<del_button.length;i++){
+    $(del_button[i]).click(function(){
+      if (confirm("确定要删除这个用户吗?")){
+        var s = ($(this)).parent().parent().find("._id").text();
+        $.ajax({
+          cache: false,
+          type: "POST",
+          url: "delUser",
+          data: "id=" + s,
+          async: false,
+          error: function (request) {
+            debug_print('加载失败');
+          },
+          success: function (data) {
+            var jsonObj = JSON.parse(data);
+            if (jsonObj.Success){
+              alert("删除成功");
+              getPage("userManagement");
+            }else{
+              //否则显示错误信息
+              alert("失败");
+            }
+          }
+        });
+      }
+    });
+  }
+</script>
