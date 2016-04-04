@@ -64,7 +64,11 @@
                 $(".window").hide();
             }else{
                 //否则显示错误信息
-                alert("失败");
+                if (jsonObj.errID == 303) {
+                    alert("权限不足");
+                } else {
+                    alert("失败");
+                }
             }
       }
     });

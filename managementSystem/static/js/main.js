@@ -7,3 +7,13 @@ function debug_print(s){
         alert(s);
     }
 }
+function getLocalTime(nS) {
+  return new Date(parseInt(nS) * 1000).toLocaleString().replace(/:\d{1,2}$/, ' ');
+}
+function _my_loadOver(name) {
+  $(".ref").click(function () {
+    if (my_exit_()) {
+      getPage(name);
+    }
+  });
+}

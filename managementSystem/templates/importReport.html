@@ -1,21 +1,184 @@
+<link type="text/css" rel="stylesheet" href="static/Plupload/jquery.ui.plupload/css/jquery.ui.plupload.css"
+      media="screen">
 <style>
-  #main{
-    width: 30%;
-    margin: 50px auto;
-  }
-  #txt{
-    margin: 35px 0px;
-    font-size: 15px;
+    body {
+        background: #fff;
+    }
 
-  }
+    #uploader {
+        max-width: 800px;
+        margin: 50px auto;
+    }
 </style>
+<!--[if lte IE 7]>
+    <style>
+        #main-menu {
+            position: absolute;
+            position: fixed;
+        }
 
+        .menu-item {
+            float: left;
+        }
+
+        .span4 {
+            float: left;
+        }
+
+        .clearfix {
+            clear: both;
+        }
+
+        .btn {
+            zoom: 1;
+        }
+    </style>
+<![endif]-->
+<!--[if lt IE 9]>
+<script src="js/html5shiv.js"></script>
+<![endif]-->
+</head>
+<body>
 <div id="body_head">
-  <span class="title">导入实验</span>
+    <span class="title">批量导入实验</span>
   <span class="ref">刷新</span>
 </div>
-<hr align="center" width="90%" />
 <div id="main">
-  <div id="txt"><span>请选择需要导入的excel或word文件</span></div>
-  <input type="file"><input type="button" value="确定">
+    <div id="uploader">
+        <div class="plupload_wrapper">
+            <div class="ui-widget-content plupload_container ui-resizable plupload_view_thumbs" id="uploader_container">
+                <div class="ui-state-default ui-widget-header plupload_header">
+                    <div class="plupload_header_content">
+                        <div class="plupload_logo"></div>
+                        <div class="plupload_header_title">选择文件</div>
+                        <div class="plupload_header_text">将文件添加到上传队列，然后点击”开始上传“按钮。</div>
+                        <div class="plupload_view_switch ui-buttonset" style="display: block;"><input type="radio"
+                                                                                                      id="uploader_view_list"
+                                                                                                      name="view_mode_uploader"
+                                                                                                      checked="checked"
+                                                                                                      class="ui-helper-hidden-accessible"><label
+                                class="plupload_button ui-button ui-widget ui-state-default ui-button-icon-only ui-corner-left"
+                                for="uploader_view_list" data-view="list" role="button" aria-disabled="false"
+                                title="List" aria-pressed="false"><span class="ui-button-text">List</span><span
+                                class="ui-button-icon-secondary ui-icon ui-icon-grip-dotted-horizontal"></span></label><input
+                                type="radio" id="uploader_view_thumbs" name="view_mode_uploader"
+                                class="ui-helper-hidden-accessible"><label
+                                class="plupload_button ui-button ui-widget ui-state-default ui-button-icon-only ui-corner-right ui-state-active"
+                                for="uploader_view_thumbs" data-view="thumbs" role="button" aria-disabled="false"
+                                title="Thumbnails" aria-pressed="true"><span
+                                class="ui-button-text">Thumbnails</span><span
+                                class="ui-button-icon-secondary ui-icon ui-icon-image"></span></label></div>
+                    </div>
+                </div>
+                <table class="plupload_filelist plupload_filelist_header ui-widget-header">
+                    <tbody>
+                    <tr>
+                        <td class="plupload_cell plupload_file_name">文件名</td>
+                        <td class="plupload_cell plupload_file_status">状态</td>
+                        <td class="plupload_cell plupload_file_size">大小</td>
+                        <td class="plupload_cell plupload_file_action">&nbsp;</td>
+                    </tr>
+                    </tbody>
+                </table>
+                <div class="plupload_content plupload_dropbox" id="uploader_dropbox">
+                    <div class="plupload_droptext">把文件拖到这里。</div>
+                    <ul class="plupload_filelist_content" id="uploader_filelist" unselectable="on"></ul>
+                    <div class="plupload_clearer">&nbsp;</div>
+                </div>
+                <table class="plupload_filelist plupload_filelist_footer ui-widget-header">
+                    <tbody>
+                    <tr>
+                        <td class="plupload_cell plupload_file_name">
+                            <div class="plupload_buttons" id="uploader_buttons"><!-- Visible --><a
+                                    class="plupload_button plupload_add ui-button ui-widget ui-state-default ui-corner-all ui-button-text-icon-primary"
+                                    id="uploader_browse" role="button" aria-disabled="false" style="z-index: 1;"><span
+                                    class="ui-button-icon-primary ui-icon ui-icon-circle-plus"></span><span
+                                    class="ui-button-text">增加文件</span></a>&nbsp;<a
+                                    class="plupload_button plupload_start ui-button ui-widget ui-state-default ui-corner-all ui-button-disabled ui-state-disabled ui-button-text-icon-primary"
+                                    id="uploader_start" role="button" aria-disabled="true"><span
+                                    class="ui-button-icon-primary ui-icon ui-icon-circle-arrow-e"></span><span
+                                    class="ui-button-text">开始上传</span></a>&nbsp;<a
+                                    class="plupload_button plupload_stop plupload_hidden ui-button ui-widget ui-state-default ui-corner-all ui-button-text-icon-primary"
+                                    id="uploader_stop" role="button" aria-disabled="false"><span
+                                    class="ui-button-icon-primary ui-icon ui-icon-circle-close"></span><span
+                                    class="ui-button-text">停止上传</span></a>&nbsp;
+                                <div id="html5_1aei0eg381un21ujdfoc2v61n3j3_container"
+                                     class="moxie-shim moxie-shim-html5"
+                                     style="position: absolute; top: 0px; left: 0px; width: 88px; height: 27px; overflow: hidden; z-index: 0;">
+                                    <input id="html5_1aei0eg381un21ujdfoc2v61n3j3" type="file"
+                                           style="font-size: 999px; opacity: 0; position: absolute; top: 0px; left: 0px; width: 100%; height: 100%;"
+                                           multiple=""
+                                           accept="image/jpeg,image/gif,image/png,application/zip,.rar,.Avi,.MP4"></div>
+                            </div>
+                            <div class="plupload_started plupload_hidden"><!-- Hidden -->
+                                <div class="plupload_progress plupload_right">
+                                    <div class="plupload_progress_container ui-progressbar ui-widget ui-widget-content ui-corner-all"
+                                         role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+                                        <div class="ui-progressbar-value ui-widget-header ui-corner-left"
+                                             style="display: none; width: 0%;"></div>
+                                    </div>
+                                </div>
+                                <div class="plupload_cell plupload_upload_status"></div>
+                                <div class="plupload_clearer">&nbsp;</div>
+                            </div>
+                        </td>
+                        <td class="plupload_file_status"><span class="plupload_total_status">0%</span></td>
+                        <td class="plupload_file_size"><span class="plupload_total_file_size">0 kb</span></td>
+                        <td class="plupload_file_action"></td>
+                    </tr>
+                    </tbody>
+                </table>
+                <div class="ui-resizable-handle ui-resizable-s" style="z-index: 90;"></div>
+            </div>
+            <input class="plupload_count" value="0" type="hidden" id="uploader_count" name="uploader_count"></div>
+    </div>
 </div>
+<script type="text/javascript" src="static/Plupload/plupload.full.min.js" charset="UTF-8"></script>
+<script type="text/javascript" src="static/Plupload/jquery.ui.plupload/jquery.ui.plupload.min.js"
+        charset="UTF-8"></script>
+<script type="text/javascript" src="static/Plupload/i18n/zh_CN.js" charset="UTF-8"></script>
+<script type="text/javascript">
+    $(function () {
+        $("#uploader").plupload({
+            // General settings
+            runtimes: 'html5,flash,silverlight,html4',
+            url: 'cc',
+            max_file_size: '1mb',//最大文件大小
+            max_file_count: 20,//最大文件数量
+            chunk_size: '1mb',
+            // Resize images on clientside if we can
+            resize: {
+                width: 200,
+                height: 200,
+                quality: 90,
+                crop: true // crop to exact dimensions
+            },
+            // Specify what files to browse for
+            filters: [
+                {title: "Excel文件", extensions: "xls,xlsx"},
+                {title: "Word文件", extensions: "doc,docx"}
+            ],
+            // Rename files by clicking on their titles
+            rename: true,
+            // Sort files
+            sortable: true,
+            // Enable ability to drag'n'drop files onto the widget (currently only HTML5 supports that)
+            dragdrop: true,
+            // Views to activate
+            views: {
+                list: true,
+                thumbs: true,
+                active: 'thumbs'
+            },
+            // Flash settings
+            flash_swf_url: 'js/Moxie.swf',
+            // Silverlight settings
+            silverlight_xap_url: 'js/Moxie.xap'
+        });
+    });
+    function my_exit_() {
+        return true;
+    }
+    _my_loadOver("importReport");
+</script>
+</body>

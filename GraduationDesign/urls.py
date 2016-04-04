@@ -25,5 +25,6 @@ urlpatterns = [
     url(r'getPage', getPage, name = 'getPage'), 
     url(r'addUser', addUser, name = 'addUser'),
     url(r'delUser', delUser, name = 'delUser'),
-    url(r'getExcel', getExcel, name = 'getExcel'), 
+    url(r'preview', preview, name='preview'),
+    url(r'changeJuris', changeJuris, name='changeJuris'),
 ]

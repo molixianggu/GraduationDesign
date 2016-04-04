@@ -1,4 +1,5 @@
 from django.db import models
+
 from django.contrib import admin
 
 class Admin(models.Model):
@@ -11,13 +12,15 @@ class Admin(models.Model):
     checkAdmin = models.BooleanField()              #审核中
     loginIP = models.CharField(max_length = 20)     #登录IP
     loginTime = models.IntegerField()               #登录时间
-    
+
+
 class adminGroup(models.Model):
     groupname = models.CharField(max_length = 30)   #管理组名
     description = models.TextField()                #描述
     groupsite = models.CharField(max_length = 30)   #默认进入
     checkinfo = models.BooleanField()               #审核中
-    
+
+
 class device(models.Model):
     initdeviceid = models.CharField(max_length = 32, null = True)
     testformkey = models.CharField(max_length = 1024, null = True)
@@ -33,7 +36,8 @@ class device(models.Model):
 #    deviceinfo = blob
 #    deviceruler = blob
     pdfkey   = models.CharField(max_length = 1024, null = True)
-    
+
+
 class deviceType(models.Model):
     parentid = models.CharField(max_length = 32, null = True)
     pathcode = models.CharField(max_length = 200, null = True)
@@ -45,7 +49,8 @@ class deviceType(models.Model):
     testformkey = models.CharField(max_length = 1024, null = True)
     pdfkey = models.CharField(max_length = 1024, null = True)
     xlskey = models.CharField(max_length = 1024, null = True)
-    
+
+
 class subStation(models.Model):
     substationid = models.CharField(max_length = 200, null = True)
     substationname = models.CharField(max_length = 200, null = True)
@@ -64,21 +69,29 @@ class mylogs(models.Model):
     content = models.CharField(max_length = 200, null = True)
 
 class experimentalType(models.Model):
-    category = models.IntegerField(null = True)             #所属分类
-    templatePositions = models.CharField(max_length = 200)  #模板位置
-    templateName = models.CharField(max_length = 200, null = True)
-    indexKey = models.CharField(max_length = 200, null = True)
-    
-    
-##    devicetyperuler = blob
+  category = models.CharField(max_length=200)  # 所属分类
+  templatePositions = models.FileField(upload_to='./managementSystem/static/data/experimentalType')  # 模板位置
+  templateName = models.CharField(max_length=200, null=True, default="")
+  indexKey = models.CharField(max_length=200, null=True, default="")
+
+
+class experimental(models.Model):
+  experimentalName = models.CharField(max_length=200)
+  file = models.FileField(upload_to='./managementSystem/static/data/experimental')
+  PeopleUpload = models.ForeignKey(Admin, related_name='experimentals')
+  uploadTime = models.IntegerField(null=True, default=0)
+
+
+# devicetyperuler = blob
 #    dataindex = models.CharField(max_length = 1024, null = True)
 #    dataenabled = models.IntegerField(null = True)
 #    deviceformkey = models.CharField(max_length = 1024, null = True)
 #    testformkey = models.CharField(max_length = 1024, null = True)
 #    pdfkey = models.CharField(max_length = 1024, null = True)
 #    xlskey = models.CharField(max_length = 1024, null = True)
-    
+
 
 admin.site.register(mylogs)
 admin.site.register(Admin)
 admin.site.register(experimentalType)
+admin.site.register(experimental)

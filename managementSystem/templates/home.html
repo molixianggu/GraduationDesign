@@ -6,19 +6,18 @@
   <div class="sub_title">
     <div id="quick">
       <span class="t">快捷</span>
-      <span class="more">更多>></span>
       <hr align="center" width="90%" />
       <div class="main">
-        <div class="b"><img src="static/img/add_normal.png">
-          <span>新建实验</span>
-        </div>
+          {#        <div class="b"><img src="static/img/add_normal.png">#}
+          {#          <span>新建实验</span>#}
+          {#        </div>#}
       </div>
     </div>
   </div>
   <div class="sub_title">
     <div id="logs">
       <span class="t">日志</span>
-      <span class="more">更多>></span>
+        <span class="more" id="log_more">更多>></span>
       <hr align="center" width="90%" />
       <div class="main">
         <ul>
@@ -54,7 +53,14 @@
   </div>
 </div>
 <script>
+    $("#log_more").click(function () {
+        if (my_exit_()) {
+            getPage("logsManage");
+        }
+    });
+
   function my_exit_(){
     return true;
   }
+    _my_loadOver("home");
 </script>

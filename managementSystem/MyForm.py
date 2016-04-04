@@ -11,37 +11,41 @@ def User_presence(value):
 
 class RegisterForm(forms.Form):
     nickName = forms.CharField(
-        max_length = 32, 
+      max_length=32,
         label = '昵称'
     )
     userName = forms.CharField(
-        max_length = 30, 
+      max_length=30,
         label = '用户名',
         validators=[
-            User_presence, 
+          User_presence,
         ]
     )
     passWord = forms.CharField(
-        max_length = 32, 
-        label = '密码', 
-        widget=forms.PasswordInput(), 
+      max_length=32,
+      label='密码',
+      widget=forms.PasswordInput(),
     )
     repPassWord = forms.CharField(
-        max_length = 32, 
-        label = '确认', 
-        widget=forms.PasswordInput(), 
+      max_length=32,
+      label='确认',
+      widget=forms.PasswordInput(),
     )
 #    question = forms.ChoiceField(
-#        widget=forms.RadioSelect, 
-#        label = '密码问题', 
+    #        widget=forms.RadioSelect,
+    #        label = '密码问题',
 #        choices=(
-#            ('0', 'abcde'), 
+    #            ('0', 'abcde'),
 #            ('1', 'bdeee'),
 #            ('2', 'python'),
 #            ('3', 'java')
 #        )
 #    )
     answer = forms.CharField(
-        max_length = 50, 
+      max_length=50,
         label = '答案'
     )
+
+
+class importReport(forms.Form):
+  file = forms.FileField()

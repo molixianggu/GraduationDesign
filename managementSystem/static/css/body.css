@@ -18,6 +18,7 @@
 .butBox{
   float: left;
   margin: 10px;
+  cursor: pointer;
 }
 .butBox span{
   color: #666666;
@@ -30,6 +31,7 @@
 }
 #left_meun li{
   list-style-type:none;
+  cursor: pointer;
 }
 #left_meun div{
   margin: 2px;
@@ -78,6 +80,7 @@
   float: right;
   margin: auto 15px;
   font-size: 14px;
+  cursor: pointer;
 }
 .t{
   font-weight: bold;
@@ -113,4 +116,21 @@
 }
 .list_title{
   font-weight: bold;
+}
+
+#rightBox center {
+  position: fixed;
+  z-index: 7;
+  width: 300px;
+  background-color: #444444;
+}
+
+#rightBox {
+  overflow: auto;
+  height: 580px;
+  margin: 3px 0px;
+}
+
+.ref {
+  cursor: pointer;
 }

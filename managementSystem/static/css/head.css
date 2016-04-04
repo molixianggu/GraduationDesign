@@ -74,11 +74,14 @@
   width: 25px;
   height: 25px;
   margin: 3px;
+  cursor: pointer;
 }
-#bg-img{
+
+#bg-imgs {
   position: fixed;
   z-index:8;
   top: 0px;
+  left: 0px;
   width: 100%;
   height: 100%;
   display: none;

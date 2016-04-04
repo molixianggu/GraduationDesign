@@ -36,6 +36,13 @@
     margin: 15px 35px;
     margin-left: 80%;
   }
+
+  .can-input input {
+      width: 80px;
+      height: 18px;
+      font-size: 15px;
+      display: none;
+  }
 </style>
 <div id="body_head">
   <span class="title">用户管理</span>
@@ -48,7 +55,7 @@
       <div class="list_title">
         <div class="_id">ID</div>
         <div class="_userName">用户名</div>
-        <div class="_group">管理组</div>
+          <div class="_group">权限级别</div>
         <div class="_time">登录时间</div>
         <div class="_ip">登录IP</div>
         <div class="_operation">操作</div>
@@ -57,11 +64,13 @@
     {% for user in users %}
       <li>
         <div class="_id">{{user.id}}</div>
-        <div class="_userName">{{user.nickName}}</div>
+          <div class="_userName">
+              <div class="can-input"><input><span>{{ user.nickName }}</span></div>
+          </div>
         <div class="_group">{{user.levelName}}</div>
         <div class="_time">{{user.loginTime}}</div>
         <div class="_ip">{{user.loginIP}}</div>
-        <div class="_operation"><span>审核</span>|<span>修改</span>|<span class="del">删除</span></div>
+          <div class="_operation"><span>修改昵称</span>|<span class="del">删除</span></div>
       </li>
     {% endfor %}
   </ul>
@@ -100,12 +109,9 @@
       $(".window").hide();
     }
   });
-  function getLocalTime(nS) {
-    return new Date(parseInt(nS) * 1000).toLocaleString().replace(/:\d{1,2}$/,' ');
-  }
   var l = $("._time");
   for (var i=1;i< l.length;i++){
-    nS = $(l[i]).text();
+      var nS = $(l[i]).text();
     $(l[i]).text(getLocalTime(nS));
   }
   var del_button = $(".del");
@@ -129,11 +135,32 @@
               getPage("userManagement");
             }else{
               //否则显示错误信息
-              alert("失败");
+                if (jsonObj.errID == 303) {
+                    alert("权限不足");
+                } else {
+                    alert("失败");
+                }
             }
           }
         });
       }
     });
   }
+  $(".can-input span").click(function () {
+      var txt = $(this).text();
+      $(this).hide();
+      var inputBox = $(this).parent().find("input");
+      inputBox.val(txt);
+      inputBox.show();
+      inputBox.focus();
+  });
+  $(".can-input input").blur(function () {
+      var txt = $(this).val();
+      $(this).hide();
+      var spanBox = $(this).parent().find("span");
+      spanBox.text(txt);
+      spanBox.show();
+  });
+
+  _my_loadOver("userManagement");
 </script>
