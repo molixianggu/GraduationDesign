@@ -1,0 +1,131 @@
+<style>
+    ._id {
+        width: 7%;
+        float: left;
+    }
+
+    ._userName {
+        width: 12%;
+        float: left;
+    }
+
+    ._group {
+        width: 12%;
+        float: left;
+    }
+
+    ._time {
+        width: 28%;
+        float: left;
+    }
+
+    ._ip {
+        width: 15%;
+        float: left;
+    }
+
+    ._operation {
+        width: 25%;
+        float: right;
+    }
+
+    ._operation span {
+        font-size: 15px;
+        color: #0000ee;
+        margin: auto 5px;
+        cursor: pointer;
+    }
+
+    #font_but {
+        width: 100%;
+    }
+
+    #font_but input {
+        margin: 15px 35px;
+        margin-left: 80%;
+    }
+</style>
+<div id="body_head">
+    <span class="title">权限管理</span>
+    <span class="ref">刷新</span>
+</div>
+<hr align="center" width="90%"/>
+<div id="main">
+    <ul class="my_list">
+        <li>
+            <div class="list_title">
+                <div class="_id">ID</div>
+                <div class="_userName">用户名</div>
+                <div class="_group">当前级别</div>
+                <div class="_time">登录时间</div>
+                <div class="_ip">登录IP</div>
+                <div class="_operation">操作</div>
+            </div>
+        </li>
+        {% for user in users %}
+            <li>
+                <div class="_id">{{ user.id }}</div>
+                <div class="_userName">{{ user.nickName }}</div>
+                <div class="_group">
+                    <select name="select">
+                        {% for i, l in juris %}
+                            {% if i == user.levelName %}
+                                <option value="{{ i }}" selected="selected">{{ l }}</option>
+                            {% else %}
+                                <option value="{{ i }}">{{ l }}</option>
+                            {% endif %}
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="_time"><span>{{ user.loginTime }}</span></div>
+                <div class="_ip">{{ user.loginIP }}</div>
+                <div class="_operation"><span class="_operation_ok">确认修改</span></div>
+            </li>
+        {% endfor %}
+    </ul>
+</div>
+<script>
+    var ok_button = $("._operation_ok");
+    $.map($(".my_list ._time span"), function (x) {
+        $(x).text(getLocalTime($(x).text()));
+    });
+    for (var i = 0; i < ok_button.length; i++) {
+        $(ok_button[i]).click(function () {
+            if (confirm("确定要这样修改吗?")) {
+                var par = ($(this)).parent().parent();
+                var id = par.find("._id").text();
+                var lv = par.find("._group select").val();
+                $.ajax({
+                    cache: false,
+                    type: "POST",
+                    url: "changeJuris",
+                    data: "id=" + id + "&lv=" + lv,
+                    async: false,
+                    error: function (request) {
+                        debug_print('加载失败');
+                    },
+                    success: function (data) {
+                        var jsonObj = JSON.parse(data);
+                        if (jsonObj.Success) {
+                            alert("修改成功");
+                            getPage("JurisdictionManage");
+                        } else {
+                            //否则显示错误信息
+                            if (jsonObj.errID == 303) {
+                                alert("权限不足");
+                            } else if (jsonObj.errID == 305) {
+                                alert("不能给予用户超过自身的权限");
+                            } else if (jsonObj.errID == 304) {
+                                alert("不能修改超过自身级别的权限");
+                            } else {
+                                alert("未知原因失败");
+                            }
+                            getPage("JurisdictionManage");
+                        }
+                    }
+                });
+            }
+        });
+    }
+    _my_loadOver("JurisdictionManage");
+</script>

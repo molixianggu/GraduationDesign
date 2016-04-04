@@ -1,0 +1,177 @@
+<style>
+    #main {
+        height: 500px;
+        background-color: #0077cc;
+    }
+
+    #ch_select {
+        float: left;
+        margin: 15px 40px;
+        height: 20px;
+
+    }
+
+    #ch_select label {
+        cursor: pointer;
+        float: left;
+        margin: auto 5px;
+    }
+
+    #search {
+        height: 30px;
+        padding: 10px;
+        margin-left: 35%;
+    }
+
+    #search input {
+        height: 20px;
+        width: 150px;
+        font-size: 18px;
+    }
+
+    #main ul {
+        overflow: auto;
+        height: 400px;
+        background-color: #5690D2;
+        margin: 8px 0px;
+        margin-bottom: 3px;
+    }
+
+    .template_id {
+        display: none;
+    }
+
+    #main li {
+        padding: 10px 15px;
+        border: 2px solid #ffffff;
+        background-color: #5690D2;
+        width: 90%;
+        height: 22px;
+        margin: 3px;
+        list-style-type: none;
+    }
+
+    .template_name {
+        float: left;
+        width: 28%;
+    }
+
+    .template_category {
+        float: left;
+        margin-left: 20%;
+        font-size: 14px;
+        color: #444444;
+    }
+
+    .template_button {
+        float: right;
+        margin-left: 10%;
+    }
+
+    .template_button span {
+        margin: 1px 3px;
+        cursor: pointer;
+    }
+
+    #output_but {
+        float: right;
+        margin: 0px 38px;
+        height: 20px;
+    }
+</style>
+<div id="body_head">
+    <span class="title">导出实验</span>
+    <span class="ref">刷新</span>
+</div>
+<div id="main">
+    <div id="ch_select">
+        <label id="all">全选</label>
+        <label id="unall">全不选</label>
+    </div>
+    <div id="search">
+        快速搜索：
+        <input value="">
+    </div>
+    <ul class="templatef">
+        {% for template in templateList %}
+            <li value="0">
+                <div class="template_name">{{ template.experimentalName }}</div>
+                <div class="template_category">
+                    由[{{ template.PeopleUpload.nickName }}]
+                    在<span class="template_key">{{ template.uploadTime }}</span>上传
+                </div>
+                <div class="template_id">{{ template.id }}</div>
+            </li>
+        {% endfor %}
+    </ul>
+    <div id="output_but"><input type="button" value="确认导出"></div>
+</div>
+
+<script>
+    var DownloadPath = "";
+    var template = $(".templatef li");
+    var my_list = [];   //做自动补全的列表
+    for (var i = 0; i < template.length; i++) {
+        my_list.push($(template[i]).find(".template_name").text());
+        $(template[i]).find(".template_key").text(getLocalTime($(template[i]).find(".template_key").text()));
+        //点击事件
+    }
+    //全选按钮
+    $("#ch_select #all").click(function () {
+        $.map($(".templatef li"), function (x) {
+            if ($(x).css("display") != "none") {
+                $(x).css("background-color", "#56f0ff");
+                $(x).attr("value", "1");
+            }
+        });
+    });
+    $("#ch_select #unall").click(function () {
+        $.map($(".templatef li"), function (x) {
+            if ($(x).css("display") != "none") {
+                $(x).css("background-color", "#5690D2");
+                $(x).attr("value", "0");
+            }
+        });
+    });
+    //导出按钮
+    $("#output_but input").button();
+    $("#output_but input").click(function () {
+        ;
+    });
+
+    $("#search input").on("input propertychange", function () {
+        var v = $("#search input").val();
+        var arr = v.split(" ");
+        var template = $(".templatef li");
+        for (var i = 0; i < template.length; i++) {
+            var name = $(template[i]).find(".template_name").text();
+            var cate = $(template[i]).find(".template_category").text();
+            for (var j = 0; j < arr.length; j++) {
+                if ((name + cate).indexOf(arr[j]) == -1) {
+                    break;
+                }
+            }
+            if (j < arr.length) {
+                $(template[i]).hide();
+            } else {
+                $(template[i]).show();
+            }
+        }
+    });
+    $.map($(".templatef li"), function (x) {
+        $(x).click(function () {
+            var v = $(this).attr("value");
+            if (v == "0") {
+                $(this).css("background-color", "#56f0ff");
+                $(this).attr("value", "1");
+            } else {
+                $(this).css("background-color", "#5690D2");
+                $(this).attr("value", "0");
+            }
+        });
+    });
+    function my_exit_() {
+        return true;
+    }
+    _my_loadOver("outputReport");
+</script>

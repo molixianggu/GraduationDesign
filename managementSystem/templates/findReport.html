@@ -1,0 +1,123 @@
+<style>
+    #main {
+        height: 500px;
+        background-color: #0077cc;
+    }
+
+    #search {
+        height: 30px;
+        padding: 10px;
+        margin-left: 35%;
+    }
+
+    #search input {
+        height: 20px;
+        width: 150px;
+        font-size: 18px;
+    }
+
+    #main ul {
+        overflow: auto;
+        height: 400px;
+        background-color: #5690D2;
+    }
+
+    .template_id {
+        display: none;
+    }
+
+    #main li {
+        padding: 10px 15px;
+        border: 2px solid #ffffff;
+        width: 90%;
+        height: 22px;
+        margin: 3px;
+        list-style-type: none;
+    }
+
+    .template_name {
+        float: left;
+        width: 28%;
+    }
+
+    .template_category {
+        float: left;
+        margin-left: 20%;
+        font-size: 14px;
+        color: #444444;
+    }
+
+    .template_button {
+        float: right;
+        margin-left: 10%;
+    }
+
+    .template_button span {
+        margin: 1px 3px;
+        cursor: pointer;
+    }
+
+    .template_pos {
+        display: none;
+    }
+</style>
+<div id="body_head">
+    <span class="title">检索实验</span>
+    <span class="ref">刷新</span>
+</div>
+<div id="main">
+    <div id="search">
+        快速搜索：
+        <input value="">
+    </div>
+    <ul>
+        {% for template in templateList %}
+            <li class="template">
+                <div class="template_name">{{ template.experimentalName }}</div>
+                <div class="template_category">
+                    由[{{ template.PeopleUpload.nickName }}]
+                    在<span class="template_key">{{ template.uploadTime }}</span>上传
+                </div>
+                <div class="template_id">{{ template.id }}</div>
+                {#        <div class="template_button">#}
+                {#            <span class="preview">预览</span>#}
+                {#            <span class="upload">上传</span>#}
+                {#            <span class="download">下载空白模板</span>#}
+                {#        </div>#}
+            </li>
+        {% endfor %}
+    </ul>
+</div>
+<script>
+    var DownloadPath = "";
+    var template = $(".template");
+    var my_list = [];
+    for (var i = 0; i < template.length; i++) {
+        my_list.push($(template[i]).find(".template_name").text());
+        $(template[i]).find(".template_key").text(getLocalTime($(template[i]).find(".template_key").text()));
+        //点击事件
+    }
+    $("#search input").on("input propertychange", function () {
+        var v = $("#search input").val();
+        var arr = v.split(" ");
+        var template = $(".template");
+        for (var i = 0; i < template.length; i++) {
+            var name = $(template[i]).find(".template_name").text();
+            var cate = $(template[i]).find(".template_category").text();
+            for (var j = 0; j < arr.length; j++) {
+                if ((name + cate).indexOf(arr[j]) == -1) {
+                    $(template[i]).hide();
+                    break;
+                } else {
+                    $(template[i]).show();
+                    break;
+                }
+            }
+        }
+    });
+
+    function my_exit_() {
+        return true;
+    }
+    _my_loadOver("findReport");
+</script>

@@ -1,0 +1,118 @@
+<style>
+    #main {
+        height: 480px;
+        min-width: 784px;
+    }
+
+    #search input {
+        height: 20px;
+        width: 150px;
+        font-size: 18px;
+    }
+
+    #main ul {
+        padding: 8px;
+        overflow: auto;
+        height: 100%;
+        background-color: #5690D2;
+    }
+
+    .log_id {
+        display: none;
+    }
+
+    #main li {
+        padding: 9px 15px;
+        border: 1px solid #ffffff;
+        width: 96%;
+        height: 18px;
+        margin: 3px;
+        list-style-type: none;
+    }
+
+    .log-class .log-name {
+        width: 15%;
+        margin: 0px 8px;
+        float: left;
+    }
+
+    .log-class .log-content {
+        margin: 0px 20px;
+        float: left;
+    }
+
+    .log_button {
+        float: right;
+        width: 15%;
+    }
+
+    .log-button div {
+        height: 26px;
+        width: 26px;
+    }
+
+    .log_button div img {
+        cursor: pointer;
+        float: right;
+    }
+</style>
+<div id="body_head">
+    <span class="title">日志管理</span>
+    <span class="ref">刷新</span>
+</div>
+<div id="main">
+    <ul>
+        {% for log in logsList %}
+            <li class="log-class">
+                <div class="log-name">{{ log.user.nickName }}</div>
+                <div class="log-content">
+                    在<span class="_time">{{ log.time }}</span>
+                    <span class="log-con-event">{{ log.content }}</span>
+                </div>
+                <div class="log_id">{{ log.id }}</div>
+                <div class="log_button">
+                    <div><img class="this-view" src="static/img/appearance_hover.png" title="仅显示此人"></div>
+                    <div><img class="not-this-view" src="static/img/msg3_hover.png" title="不显示此人"></div>
+                    <div><img class="event-view" src="static/img/keyboard_hover.png" title="查看该事件"></div>
+                </div>
+            </li>
+        {% endfor %}
+    </ul>
+</div>
+<script>
+    $(".log_button .this-view").click(function () {
+        var name = $(this).parent().parent().parent().find(".log-name").text();
+        $.map($(".log-class"), function (x) {
+            var ss = $(x).find(".log-name").text();
+            if (ss != name) {
+                $(x).hide();
+            } else {
+                $(x).show();
+            }
+        });
+    });
+    $(".log_button .not-this-view").click(function () {
+        var name = $(this).parent().parent().parent().find(".log-name").text();
+        $.map($(".log-class"), function (x) {
+            var ss = $(x).find(".log-name").text();
+            if (ss == name) {
+                $(x).hide();
+            }
+        });
+    });
+    $(".log_button .event-view").click(function () {
+        var name = $(this).parent().parent().parent().find(".log-con-event").text().substr(0, 3);
+        $.map($(".log-class"), function (x) {
+            var ss = $(x).find(".log-con-event").text().substr(0, 3);
+            if (ss != name) {
+                $(x).hide();
+            } else {
+                $(x).show();
+            }
+        });
+    });
+    function my_exit_() {
+        return true;
+    }
+    _my_loadOver("logsManage");
+</script>

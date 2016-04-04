@@ -212,8 +212,8 @@ def changeJuris(request):
   if request.method != 'POST':
     return HttpResponse()
   b, u = managementSystem.function.verification_cookie(request)
-    if not b:
-      return HttpResponseRedirect('/')
+  if not b:
+    return HttpResponseRedirect('/')
   Success, errID = False, 0
   if managementSystem.function.jurisdiction('JurisdictionManage.html', u.levelName):
     _id = request.POST.get('id', None)
