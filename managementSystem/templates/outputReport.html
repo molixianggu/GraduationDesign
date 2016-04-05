@@ -73,6 +73,9 @@
         cursor: pointer;
     }
 
+    .template_pos {
+        display: none;
+    }
     #output_but {
         float: right;
         margin: 0px 38px;
@@ -101,12 +104,16 @@
                     在<span class="template_key">{{ template.uploadTime }}</span>上传
                 </div>
                 <div class="template_id">{{ template.id }}</div>
+                <div class="template_pos">{{ template.file }}</div>
+                <div class="template_button">
+                    <span class="preview">预览</span>
+                </div>
             </li>
         {% endfor %}
     </ul>
     <div id="output_but"><input type="button" value="确认导出"></div>
 </div>
-
+<div id="previewBox"></div>
 <script>
     var DownloadPath = "";
     var template = $(".templatef li");
@@ -136,7 +143,39 @@
     //导出按钮
     $("#output_but input").button();
     $("#output_but input").click(function () {
-        ;
+        var myList = "id=";
+        $.map($(".templatef li"), function (x) {
+            if ($(x).attr("value") == "1") {
+                myList += ($(x).find(".template_id").text() + ",");
+            }
+        });
+        if (myList.length > 0) {
+            $.ajax({
+                cache: false,
+                type: "POST",
+                url: "outputReport",
+                data: myList,
+                async: false,
+                error: function (request) {
+                    alert('加载失败');
+
+                },
+                success: function (data) {
+                    var jsonObj = JSON.parse(data);
+                    if (jsonObj.Success) {
+                        alert("成功");
+                        window.location.href = jsonObj.html;
+                    } else {
+                        //否则显示错误信息
+                        if (jsonObj.errID == 303) {
+                            alert("权限不足");
+                        } else {
+                            alert("失败");
+                        }
+                    }
+                }
+            });
+        }
     });
 
     $("#search input").on("input propertychange", function () {
@@ -159,6 +198,43 @@
         }
     });
     $.map($(".templatef li"), function (x) {
+
+        $(x).find(".template_button span").click(function () {
+            var ts = $(this).parent().parent().find(".template_pos").text().replace(/.xls$/, ".html").substr(17);
+            $.ajax({
+                cache: false,
+                type: "get",
+                url: ts,
+                data: "",
+                async: false,
+                error: function (request) {
+                    alert('加载失败');
+                },
+                success: function (data) {
+                    $("#main").hide();
+                    $("#previewBox").html(data);
+
+                    $("#previewBox center").append(
+                            "<input id='cenreturn' type='button' value='返回'>"
+                    );
+                    var imgbox = $('#previewBox img');
+                    for (var imgid = 0; imgid < imgbox.length; imgid++) {
+                        var s = $(imgbox[imgid]).attr('src');
+                        $(imgbox[imgid]).attr('src', 'static/data/experimentalType/' + s);
+                    }
+                    $("#cenreturn").click(function () {
+                        $(".ui-dialog").hide();
+                        $("#main").show();
+                        $("#previewBox").html("");
+                    });
+                    $("#previewBox center").dialog({
+                        resizable: false
+                    });
+                }
+            });
+            return false;
+        });
+
         $(x).click(function () {
             var v = $(this).attr("value");
             if (v == "0") {

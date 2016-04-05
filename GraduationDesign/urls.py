@@ -27,4 +27,6 @@ urlpatterns = [
     url(r'delUser', delUser, name = 'delUser'),
     url(r'preview', preview, name='preview'),
     url(r'changeJuris', changeJuris, name='changeJuris'),
+    url(r'delReport', delReport, name='delReport'),
+    url(r'outputReport', outputReport, name='outputReport'),
 ]

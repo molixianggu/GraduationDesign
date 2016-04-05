@@ -22,7 +22,7 @@
       <div class="main">
         <ul>
           {% for log in logs %}
-            <li>{{log.time}} [{{log.user.nickName}}]{{log.content}}</li>
+              <li>{{ log.time }} [{{ log.user.nickName }}]<span class="logCon">{{ log.content }}</span></li>
           {% endfor %}
         </ul>
       </div>
@@ -56,6 +56,13 @@
     $("#log_more").click(function () {
         if (my_exit_()) {
             getPage("logsManage");
+        }
+    });
+    $.map($(".logCon"), function (x) {
+        var s = $(x).text();
+        if (s.length > 12) {
+            $(x).text(s.substr(0, 12) + "...");
+
         }
     });
 

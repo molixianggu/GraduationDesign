@@ -101,10 +101,9 @@ def addUser(request):
           Context({
             'registerForm': MyForm.RegisterForm(),
             'question': [
-              '你的高中班主任的儿子叫你隔壁王叔叔什么？',
-              '你第一任女朋友的现任老公身高是多少？',
-              '你与你养的第一只宠物一起吃的食物什么？',
-              'Are you a virgin?',
+              '你的高中班主任叫什么？',
+              '你第一任女朋友是谁？',
+              '你与你养的第一只宠物叫什么？'
             ]
             }))
     elif request.POST.get('type', '') == 'sendForm':
@@ -169,6 +168,69 @@ def delUser(request):
     }))
     return html
 
+
+def delReport(request):
+  if request.method != 'POST':
+    return HttpResponse()
+  b, u = managementSystem.function.verification_cookie(request)
+  if not b:
+    return HttpResponseRedirect('/')
+  Success, errID = False, 0
+  reqList = request.POST.get("id", "")
+  if len(reqList) <= 0:
+    errID = 400
+  elif managementSystem.function.jurisdiction('delReport.html', u.levelName):
+    def mydel(x):
+      e = experimental.objects.get(id=int(x))
+      os.remove(e.file.name)
+      os.remove(e.file.name.replace('.xls', '.html'))
+      mylogs.objects.create(
+        user_id=u.id,
+        time=strftime('%Y-%m-%d %H:%M'),
+        content='删除实验[' + e.experimentalName + ']'
+      )
+      e.delete()
+
+    for _id in reqList.split(','):
+      if _id:
+        mydel(_id)
+    Success = True
+  else:
+    errID = 303
+  html = HttpResponse(json.dumps({
+    'Success': Success,
+    'errID': errID,
+    'html': ''
+  }))
+  return html
+
+
+def outputReport(request):
+  if request.method != 'POST':
+    return HttpResponse()
+  b, u = managementSystem.function.verification_cookie(request)
+  if not b:
+    return HttpResponseRedirect('/')
+  Success, errID, fileName = False, 0, ''
+  fileList = request.POST.get("id", "")
+  if len(fileList) <= 0:
+    errID = 400
+  elif managementSystem.function.jurisdiction('outputReport.html', u.levelName):
+    fileName = managementSystem.function.zipPack(fileList)
+    mylogs.objects.create(
+      user_id=u.id,
+      time=strftime('%Y-%m-%d %H:%M'),
+      content='导出实验包'
+    )
+    Success = True
+  else:
+    errID = 303
+  html = HttpResponse(json.dumps({
+    'Success': Success,
+    'errID': errID,
+    'html': fileName
+  }))
+  return html
 
 def getPage(request):
     if request.method != 'POST':

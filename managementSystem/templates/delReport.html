@@ -136,7 +136,39 @@
     //删除按钮
     $("#del_but input").button();
     $("#del_but input").click(function () {
-        ;
+        var myList = "id=";
+        $.map($(".templatef li"), function (x) {
+            if ($(x).attr("value") == "1") {
+                myList += ($(x).find(".template_id").text() + ",");
+            }
+        });
+        if (myList.length > 0) {
+            $.ajax({
+                cache: false,
+                type: "POST",
+                url: "delReport",
+                data: myList,
+                async: false,
+                error: function (request) {
+                    alert('加载失败');
+
+                },
+                success: function (data) {
+                    var jsonObj = JSON.parse(data);
+                    if (jsonObj.Success) {
+                        alert("删除成功");
+                        getPage("delReport");
+                    } else {
+                        //否则显示错误信息
+                        if (jsonObj.errID == 303) {
+                            alert("权限不足");
+                        } else {
+                            alert("失败");
+                        }
+                    }
+                }
+            });
+        }
     });
 
     $("#search input").on("input propertychange", function () {

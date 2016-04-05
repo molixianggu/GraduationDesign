@@ -5,6 +5,10 @@ import hashlib                                  #md5 验证
 
 import os
 
+import time
+
+import zipfile
+
 def h_md5(u):
     s = (str(u.id) + '盐' + u.userName + u.loginIP)
     return hashlib.md5(s.encode()).hexdigest()
@@ -76,3 +80,13 @@ def jurisdiction(pageName, lv):
     'outputReport.html': 2,
   }
   return d.get(pageName, 10) <= lv
+
+
+def zipPack(fileList):
+  filename = os.path.join(r'managementSystem\static\data\zipPack', str(int(time.time())) + '.zip')
+  with zipfile.ZipFile(filename, 'w', zipfile.ZIP_DEFLATED) as f:
+    for _id in fileList.split(','):
+      if _id:
+        e = experimental.objects.get(id=int(_id))
+        f.write(e.file.name, arcname=e.experimentalName)
+  return filename[17:]
