@@ -89,6 +89,16 @@ def Console(request):
       return HttpResponse()
 
 
+def upload(request):
+  if request.method != 'POST':
+    return HttpResponse()
+  b, u = managementSystem.function.verification_cookie(request)
+  if not b:
+    return HttpResponseRedirect('/')
+  if managementSystem.function.jurisdiction('addEquipment.html', u.levelName):
+    uf = MyForm.imports()
+    return HttpResponse(uf)
+
 def addUser(request):
     if request.method != 'POST':
         return HttpResponse()

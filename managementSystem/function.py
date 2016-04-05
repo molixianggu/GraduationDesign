@@ -64,6 +64,18 @@ def getDict(pageName):
       d = {
         'templateList': experimental.objects.all()
       }
+    elif pageName == 'addEquipment.html':
+      d = {
+        'templateList': EquipmentType.objects.all()
+      }
+    elif pageName == 'findEquipment.html':
+      d = {
+        'templateList': Equipment.objects.all()
+      }
+    elif pageName == 'delEquipment.html':
+      d = {
+        'templateList': Equipment.objects.all()
+      }
     return d
 
 
@@ -78,11 +90,17 @@ def jurisdiction(pageName, lv):
     'findReport.html': 2,
     'delReport.html': 4,
     'outputReport.html': 2,
+    'addEquipment.html': 4,
+    'findEquipment.html': 4,
+    'delEquipment.html': 4,
   }
   return d.get(pageName, 10) <= lv
 
 
 def zipPack(fileList):
+  l = [x for x in fileList.split(',') if x]
+  if len(l) <= 1:
+    return experimental.objects.get(id=int(l[0])).file.name[17:]
   filename = os.path.join(r'managementSystem\static\data\zipPack', str(int(time.time())) + '.zip')
   with zipfile.ZipFile(filename, 'w', zipfile.ZIP_DEFLATED) as f:
     for _id in fileList.split(','):

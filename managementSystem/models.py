@@ -82,6 +82,19 @@ class experimental(models.Model):
   uploadTime = models.IntegerField(null=True, default=0)
 
 
+class EquipmentType(models.Model):
+  category = models.CharField(max_length=200)  # 所属分类
+  templatePositions = models.FileField(upload_to='./managementSystem/static/data/EquipmentType')  # 模板位置
+  templateName = models.CharField(max_length=200, null=True, default="")
+  indexKey = models.CharField(max_length=200, null=True, default="")
+
+
+class Equipment(models.Model):
+  EquipmentName = models.CharField(max_length=200)
+  file = models.FileField(upload_to='./managementSystem/static/data/Equipment')
+  PeopleUpload = models.ForeignKey(Admin, related_name='Equipments')
+  uploadTime = models.IntegerField(null=True, default=0)
+
 # devicetyperuler = blob
 #    dataindex = models.CharField(max_length = 1024, null = True)
 #    dataenabled = models.IntegerField(null = True)
@@ -95,3 +108,5 @@ admin.site.register(mylogs)
 admin.site.register(Admin)
 admin.site.register(experimentalType)
 admin.site.register(experimental)
+admin.site.register(Equipment)
+admin.site.register(EquipmentType)

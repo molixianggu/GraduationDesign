@@ -1,0 +1,236 @@
+<style>
+    #main {
+        height: 500px;
+        background-color: #0077cc;
+    }
+
+    #search {
+        height: 30px;
+        padding: 10px;
+        margin-left: 20%;
+    }
+
+    #search input {
+        height: 20px;
+        width: 150px;
+        font-size: 18px;
+    }
+
+    #main ul {
+        overflow: auto;
+        height: 400px;
+        background-color: #5690D2;
+    }
+
+    .template_id {
+        display: none;
+    }
+
+    #main li {
+        padding: 10px 15px;
+        border: 2px solid #ffffff;
+        width: 90%;
+        height: 22px;
+        margin: 3px;
+        list-style-type: none;
+    }
+
+    .template_name {
+        float: left;
+        width: 28%;
+    }
+
+    .template_category {
+        float: left;
+        margin-left: 3px;
+        font-size: 14px;
+        color: #444444;
+    }
+
+    .template_button {
+        float: right;
+        margin-left: 10%;
+    }
+
+    .template_button span {
+        margin: 1px 3px;
+        cursor: pointer;
+    }
+
+    .template_pos {
+        display: none;
+    }
+</style>
+<div id="body_head">
+    <span class="title">设备检索</span>
+    <span class="ref">刷新</span>
+</div>
+<div id="main">
+    <div id="search">
+        快速搜索：
+        <input value=""> 按时间检索
+        <input id="startDate" value="开始时间"> 至
+        <input id="endDate" value="结束时间">
+    </div>
+    <ul>
+        {% for template in templateList %}
+            <li class="template">
+                <div class="template_name">{{ template.experimentalName }}</div>
+                <div class="template_category">
+                    由[{{ template.PeopleUpload.nickName }}]
+                    在<span class="template_key">{{ template.uploadTime }}</span>上传
+                </div>
+                <div class="template_pos">{{ template.file }}</div>
+                <div class="template_id">{{ template.id }}</div>
+                <div class="template_button">
+                    <span class="preview">预览</span>
+                </div>
+            </li>
+        {% endfor %}
+    </ul>
+</div>
+<script>
+    var DownloadPath = "";
+    var template = $(".template");
+    var my_list = [];
+    for (var i = 0; i < template.length; i++) {
+        my_list.push($(template[i]).find(".template_name").text());
+        $(template[i]).find(".template_key").text(getLocalTime($(template[i]).find(".template_key").text()));
+        //点击事件
+    }
+    function searchTxt(a) {
+        var v = $("#search input").val();
+        var arr = v.split(" ");
+        var template = $(".template");
+        for (var i = 0; i < template.length; i++) {
+            var name = $(template[i]).find(".template_name").text();
+            var cate = $(template[i]).find(".template_category").text();
+            for (var j = 0; j < arr.length; j++) {
+                if ((name + cate).indexOf(arr[j]) == -1) {
+                    $(template[i]).hide();
+                    break;
+                } else {
+                    if (a) {
+                        $(template[i]).show();
+                    }
+                }
+            }
+        }
+    }
+
+    $("#search input").on("input propertychange", function () {
+        searchTxt(true);
+    });
+    $("#startDate").datepicker({
+        /* 区域化周名为中文 */
+        dayNamesMin: ["日", "一", "二", "三", "四", "五", "六"],
+        /* 每周从周一开始 */
+        firstDay: 1,
+        /* 区域化月名为中文习惯 */
+        monthNames: ["1", "2", "3", "4", "5", "6",
+            "7", "8", "9", "10", "11", "12"],
+        /* 月份显示在年后面 */
+        showMonthAfterYear: true,
+        /* 年份后缀字符 */
+        monthSuffix: "月",
+        yearSuffix: "年",
+        /* 格式化中文日期
+         （因为月份中已经包含“月”字，所以这里省略） */
+        dateFormat: "yy/MM/dd",
+        onSelect: function (d) {
+            $.map($(".template_category span"), function (x, i, d) {
+                var d = d.split("/");
+                var b = $("#endDate").val();
+                if (b != "结束时间") {
+                    b = b.split("/");
+                } else {
+                    return;
+                }
+
+                var m = $(x).text().split(" ")[0].split("/");
+                if (new Date(d[0], d[1], d[2]).getTime() < new Date(m[0], m[1], m[2]).getTime() &&
+                        new Date(m[0], m[1], m[2]).getTime() < new Date(b[0], b[1], b[2]).getTime()) {
+                    $(x).parent().parent().show();
+                } else {
+                    $(x).parent().parent().hide();
+                }
+            }, d);
+            searchTxt(false);
+        }
+    });
+    $("#endDate").datepicker({
+        /* 区域化周名为中文 */
+        dayNamesMin: ["日", "一", "二", "三", "四", "五", "六"],
+        /* 每周从周一开始 */
+        firstDay: 1,
+        /* 区域化月名为中文习惯 */
+        monthNames: ["1", "2", "3", "4", "5", "6",
+            "7", "8", "9", "10", "11", "12"],
+        /* 月份显示在年后面 */
+        showMonthAfterYear: true,
+        /* 年份后缀字符 */
+        yearSuffix: "年",
+        /* 格式化中文日期
+         （因为月份中已经包含“月”字，所以这里省略） */
+        dateFormat: "yy/MM/dd",
+        onSelect: function (d) {
+            $.map($(".template_category span"), function (x, i, d) {
+                var d = d.split("/");
+                var b = $("#startDate").val();
+                if (b != "开始时间") {
+                    b = b.split("/");
+                } else {
+                    return;
+                }
+
+                var m = $(x).text().split(" ")[0].split("/");
+                if (new Date(d[0], d[1], d[2]).getTime() > new Date(m[0], m[1], m[2]).getTime() &&
+                        new Date(m[0], m[1], m[2]).getTime() > new Date(b[0], b[1], b[2]).getTime()) {
+                    $(x).parent().parent().show();
+                } else {
+                    $(x).parent().parent().hide();
+                }
+            }, d);
+            searchTxt(false);
+        }
+    });
+    var template = $(".template");
+    for (var i = 0; i < template.length; i++) {
+        $(template[i]).find(".preview").click(function () {
+            var ts = $(this).parent().parent().find(".template_pos").text().replace(/.xls$/, ".html").substr(17);
+            $.ajax({
+                cache: false,
+                type: "get",
+                url: ts,
+                data: "",
+                async: false,
+                error: function (request) {
+                    alert('加载失败');
+                },
+                success: function (data) {
+                    $("#rightBox").html(data);
+                    $("#rightBox center").append(
+                            "<input id='cenreturn' type='button' value='返回'>"
+                    );
+                    var imgbox = $('#rightBox img');
+                    for (var imgid = 0; imgid < imgbox.length; imgid++) {
+                        var s = $(imgbox[imgid]).attr('src');
+                        $(imgbox[imgid]).attr('src', 'static/data/experimentalType/' + s);
+                    }
+                    $("#cenreturn").click(function () {
+                        $(".ui-dialog").hide();
+                        getPage("findReport");
+                    });
+                    $("#rightBox center").dialog({
+                        resizable: false
+                    });
+                }
+            });
+        });
+    }
+    function my_exit_() {
+        return true;
+    }
+    _my_loadOver("findEquipment");
+</script>
+

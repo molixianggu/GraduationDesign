@@ -1,0 +1,191 @@
+<style>
+    #main {
+        height: 500px;
+        background-color: #0077cc;
+    }
+
+    #search {
+        height: 30px;
+        padding: 10px;
+        margin-left: 35%;
+    }
+
+    #search input {
+        height: 20px;
+        width: 150px;
+        font-size: 18px;
+    }
+
+    #main ul {
+        overflow: auto;
+        height: 400px;
+        background-color: #5690D2;
+    }
+
+    .template_key {
+        display: none;
+    }
+
+    .template_id {
+        display: none;
+    }
+
+    #main li {
+        padding: 10px 15px;
+        border: 2px solid #ffffff;
+        width: 90%;
+        height: 22px;
+        margin: 3px;
+        list-style-type: none;
+    }
+
+    .template_name {
+        float: left;
+    }
+
+    .template_category {
+        float: left;
+        margin-left: 20%;
+        font-size: 14px;
+        color: #444444;
+    }
+
+    .template_button {
+        float: right;
+        margin-left: 10%;
+    }
+
+    .template_button span {
+        margin: 1px 3px;
+        cursor: pointer;
+    }
+
+    .template_pos {
+        display: none;
+    }
+</style>
+<div id="body_head">
+    <span class="title">选择设备类型</span>
+    <span class="ref">刷新</span>
+</div>
+<div id="main">
+    <div id="search">
+        快速搜索：
+        <input value="" autocomplete="off">
+    </div>
+    <ul>
+        {% for template in templateList %}
+            <li class="template">
+                <div class="template_name">{{ template.templateName }}</div>
+                <div class="template_category">{{ template.category }}</div>
+                <div class="template_id">{{ template.id }}</div>
+                <div class="template_key">{{ template.indexKey }}</div>
+                <div class="template_pos">{{ template.templatePositions.name }}</div>
+                <div class="template_button">
+                    <span class="preview">预览</span> |
+                    <span class="upload">上传</span> |
+                    <div id="uploadBox"></div>
+                    <span class="download">下载空白模板</span>
+                </div>
+            </li>
+        {% endfor %}
+    </ul>
+</div>
+<script>
+    var DownloadPath = "";
+    var template = $(".template");
+    var my_list = [];
+    for (var i = 0; i < template.length; i++) {
+        my_list.push($(template[i]).find(".template_name").text());
+        //点击事件
+        $(template[i]).find(".preview").click(function () {
+            var ts = $(this).parent().parent().find(".template_pos").text().replace(/.xls$/, ".html").substr(17);
+            DownloadPath = $(this).parent().parent().find(".template_pos").text().substr(17);
+            $.ajax({
+                cache: false,
+                type: "get",
+                url: ts,
+                data: "",
+                async: false,
+                error: function (request) {
+                    alert('加载失败');
+                },
+                success: function (data) {
+                    $("#rightBox").html(data);
+                    $("#rightBox center").append(
+                            "<input id='cendownload' type='button' value='下载'>" +
+                            "<input id='cenreturn' type='button' value='返回'>"
+                    );
+                    var imgbox = $('#rightBox img');
+                    for (var imgid = 0; imgid < imgbox.length; imgid++) {
+                        var s = $(imgbox[imgid]).attr('src');
+                        $(imgbox[imgid]).attr('src', 'static/data/Equipment/' + s);
+                    }
+                    $("#cendownload").click(function () {
+                        window.location.href = DownloadPath;
+                    });
+                    $("#cenreturn").click(function () {
+                        $(".ui-dialog").hide();
+                        getPage("Equipment");
+                    });
+                    $("#rightBox center").dialog({
+                        resizable: false
+                    });
+                }
+            });
+        });
+        $(template[i]).find(".download").click(function () {
+            window.location.href = $(this).parent().parent().find(".template_pos").text().substr(17);
+        });
+        $(template[i]).find(".upload").click(function () {
+            $.ajax({
+                cache: false,
+                type: "POST",
+                url: "upload",
+                data: "",
+                async: false,
+                error: function (request) {
+                    alert('加载失败');
+                },
+                success: function (data) {
+                    $("#uploadBox").html(data);
+                    $("#uploadBox").dialog({
+                        resizable: false
+                    });
+                }
+            });
+        });
+    }
+    {#  $("#search input").autocomplete({#}
+    {#      source: my_list#}
+    {#  });#}
+
+    $("#search input").on("input propertychange", function () {
+        var v = $("#search input").val();
+        var arr = v.split(" ");
+        var template = $(".template");
+        for (var i = 0; i < template.length; i++) {
+            var name = $(template[i]).find(".template_name").text();
+            var cate = $(template[i]).find(".template_category").text();
+            for (var j = 0; j < arr.length; j++) {
+                if ((name + cate).indexOf(arr[j]) == -1) {
+                    break;
+                }
+            }
+            if (j < arr.length) {
+                $(template[i]).hide();
+            } else {
+                $(template[i]).show();
+            }
+        }
+    });
+
+    function my_exit_() {
+        $(".ui-dialog").hide();
+        return true;
+    }
+    _my_loadOver("addEquipment");
+</script>
+
+
+
