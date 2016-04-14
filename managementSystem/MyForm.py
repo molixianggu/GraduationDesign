@@ -47,9 +47,5 @@ class RegisterForm(forms.Form):
     )
 
 
-class imports(forms.Form):
-  Name = forms.CharField(
-    max_length=32,
-    label='名称'
-  )
+class importReport(forms.Form):
   file = forms.FileField()

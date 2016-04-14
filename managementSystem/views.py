@@ -96,9 +96,25 @@ def upload(request):
   if not b:
     return HttpResponseRedirect('/')
   if managementSystem.function.jurisdiction('addEquipment.html', u.levelName):
-    uf = MyForm.imports()
-    return HttpResponse(uf)
-
+    if request.POST.get("type", "") == "getForm":
+      uf = MyForm.importReport()
+      return render_to_response('loadTemplate.html', {'FileForm': uf})
+    elif request.POST.get("type", "") == "postForm":
+      uf = MyForm.importReport(request.POST, request.FILES)
+      print(request.POST)
+      if uf.is_valid():
+        Equipment.objects.create(  # 写入数据库
+          EquipmentName=os.path.splitext(request.POST['name'])[0],
+          file=uf.cleaned_data['file'],
+          PeopleUpload=u,
+          uploadTime=int(time())
+        )
+        mylogs.objects.create(
+          user_id=u.id,
+          time=strftime('%Y-%m-%d %H:%M'),
+          content='上传了设备文件[' + request.POST['name'] + ']'
+        )
+  return HttpResponse()
 def addUser(request):
     if request.method != 'POST':
         return HttpResponse()

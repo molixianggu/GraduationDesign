@@ -3,6 +3,8 @@ from managementSystem.models import *
 
 import hashlib                                  #md5 验证
 
+import json
+
 import os
 
 import time
@@ -76,6 +78,27 @@ def getDict(pageName):
       d = {
         'templateList': Equipment.objects.all()
       }
+    elif pageName == 'EquipmentManage.html':
+      f = [
+        {
+          'id': x.id,
+          'pid': x.DirectParent,
+          'inf': {
+            'templateName': x.templateName,
+            'category': x.category,
+            'templatePositions': x.templatePositions.name,
+            'indexKey': x.indexKey
+          }
+        } for x in EquipmentType.objects.all()
+        ]
+      w = json.dumps(f, indent=4, ensure_ascii=False)
+      d = {
+        'tree': w
+      }
+    elif pageName == 'editEquipment.html':
+      d = {
+        'templateList': Equipment.objects.all()
+      }
     return d
 
 
@@ -93,6 +116,8 @@ def jurisdiction(pageName, lv):
     'addEquipment.html': 4,
     'findEquipment.html': 4,
     'delEquipment.html': 4,
+    'EquipmentManage.html': 5,
+    'editEquipment.html': 4,
   }
   return d.get(pageName, 10) <= lv
 

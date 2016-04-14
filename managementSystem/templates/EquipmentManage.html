@@ -1,0 +1,107 @@
+<style>
+    #main li {
+        cursor: pointer;
+        height: 18px;
+        border: 1px solid #000000;
+        padding: 3px;
+        margin: 2px;
+        margin-right: 80px;
+        display: none;
+        list-style-type: square;
+    }
+
+    #main .name {
+        float: left;
+
+    }
+
+    #main .category {
+        float: left;
+        margin-left: 8px;
+        font-size: 14px;
+        color: #5a5a5a;
+    }
+
+    #main .numberBox {
+        float: right;
+        margin-right: 40px;
+    }
+
+    #main .numberBox input {
+        float: right;
+        width: 40px;
+    }
+
+    #main .EquiType_but {
+        float: right;
+        margin-right: 15px;
+        font-size: 15px;
+        color: #003eff;
+    }
+</style>
+</head>
+<body>
+<div id="body_head">
+    <span class="title">设备类型管理</span>
+    <span class="ref">刷新</span>
+</div>
+<div id="main">
+    <ul id="root">
+        <li id="item_-1" value="0">
+            <div class="name">所有设备</div>
+        </li>
+
+    </ul>
+</div>
+<script type="text/javascript">
+    var items = {{ tree|safe }};
+    function new_li(item) {
+        return '<li id="item_' + item.id + '" value="1">' +
+                '<div class="name">' + item.inf.templateName + '</div>' +
+                '<div class="category">[' + item.inf.category + ']</div>' +
+                '<div class="EquiType_but">' +
+                '<span class="add">增加子项</span> | ' +
+                '<span class="par">预览</span> | ' +
+                '<span class="change">修改</span> | ' +
+                '<span class="del">删除</span>' +
+                '</div>' +
+                '<div class="numberBox"><input type="number" value=' + item.id + '></div>' +
+                '</li>';
+    }
+    function Child_s(parent, parentId, d) {
+        parent.append('<ul class="u_' + d.toString() + '"></ul>');
+        for (var i = 0; i < items.length; i++) {
+            var item = items[i];
+            if (item.pid == parentId && item.id != parentId) {
+                sub = parent.find(".u_" + d.toString());
+                sub.append(new_li(item));
+                Child_s(sub, item.id, d + 1);
+            }
+        }
+    }
+    Child_s($("#root"), -1, 0);
+
+    $.map($("#main li"), function (x) {
+        $(x).click(function () {
+            if ($(this).attr("value") == "0") {
+                $(this).next().find("li").show("slow");
+                $(this).attr("value", "1");
+            } else {
+                $(this).next().find("li").hide("slow");
+                $(this).attr("value", "0");
+            }
+        });
+    });
+    $("#item_-1").show();
+    $.map($(".numberBox"), function (x) {
+        $(x).click(function () {
+            return false;
+        });
+    });
+    function my_exit_() {
+        return true;
+    }
+    _my_loadOver("EquipmentManage");
+</script>
+</body>
+

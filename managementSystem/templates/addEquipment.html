@@ -45,7 +45,7 @@
 
     .template_category {
         float: left;
-        margin-left: 20%;
+        margin-left: 1%;
         font-size: 14px;
         color: #444444;
     }
@@ -77,20 +77,20 @@
         {% for template in templateList %}
             <li class="template">
                 <div class="template_name">{{ template.templateName }}</div>
-                <div class="template_category">{{ template.category }}</div>
+                <div class="template_category">[{{ template.category }}]</div>
                 <div class="template_id">{{ template.id }}</div>
                 <div class="template_key">{{ template.indexKey }}</div>
                 <div class="template_pos">{{ template.templatePositions.name }}</div>
                 <div class="template_button">
                     <span class="preview">预览</span> |
                     <span class="upload">上传</span> |
-                    <div id="uploadBox"></div>
                     <span class="download">下载空白模板</span>
                 </div>
             </li>
         {% endfor %}
     </ul>
 </div>
+<div id="uploadBox"></div>
 <script>
     var DownloadPath = "";
     var template = $(".template");
@@ -142,7 +142,7 @@
                 cache: false,
                 type: "POST",
                 url: "upload",
-                data: "",
+                data: "type=getForm",
                 async: false,
                 error: function (request) {
                     alert('加载失败');
@@ -150,7 +150,31 @@
                 success: function (data) {
                     $("#uploadBox").html(data);
                     $("#uploadBox").dialog({
-                        resizable: false
+                        title: "上传文件",
+                        resizable: false,
+                        width: 350,
+                        buttons: {
+                            "确定": function () {
+                                alert($("#load_form").serialize());
+                                {#                                    $.ajax({#}
+                                {#                                        cache: false,#}
+                                {#                                        type: "POST",#}
+                                {#                                        url: "upload",#}
+                                {#                                        data: $("#load-form").serialize() + "type=postForm",#}
+                                {#                                        async: false,#}
+                                {#                                        error: function (request) {#}
+                                {#                                            alert('加载失败');#}
+                                {#                                        },#}
+                                {#                                        success: function (data) {#}
+                                {#                                            alert("成功");#}
+                                {#                                        }#}
+                                {#                                    });#}
+                                {#                                  $("#uploadBox").dialog("close");#}
+                            },
+                            "取消": function () {
+                                $("#uploadBox").dialog("close");
+                            }
+                        }
                     });
                 }
             });

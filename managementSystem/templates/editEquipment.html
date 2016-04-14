@@ -63,19 +63,28 @@
         color: #444444;
     }
 
+    .template_button {
+        float: right;
+        margin-left: 10%;
+    }
+
     .template_button span {
         margin: 1px 3px;
         cursor: pointer;
     }
 
-    #del_but {
+    .template_pos {
+        display: none;
+    }
+
+    #output_but {
         float: right;
         margin: 0px 38px;
         height: 20px;
     }
 </style>
 <div id="body_head">
-    <span class="title">设备下线</span>
+    <span class="title">编辑设备</span>
     <span class="ref">刷新</span>
 </div>
 <div id="main">
@@ -96,21 +105,25 @@
                     在<span class="template_key">{{ template.uploadTime }}</span>上传
                 </div>
                 <div class="template_id">{{ template.id }}</div>
+                <div class="template_pos">{{ template.file }}</div>
+                <div class="template_button">
+                    <span class="preview">预览</span>
+                </div>
             </li>
         {% endfor %}
     </ul>
-    <div id="del_but"><input type="button" value="确认下线"></div>
+    <div id="output_but"><input type="button" value="确认导出"></div>
 </div>
+<div id="previewBox"></div>
 <script>
     var DownloadPath = "";
     var template = $(".templatef li");
-    var my_list = [];
+    var my_list = [];   //做自动补全的列表
     for (var i = 0; i < template.length; i++) {
         my_list.push($(template[i]).find(".template_name").text());
         $(template[i]).find(".template_key").text(getLocalTime($(template[i]).find(".template_key").text()));
         //点击事件
     }
-
     //全选按钮
     $("#ch_select #all").click(function () {
         $.map($(".templatef li"), function (x) {
@@ -128,9 +141,9 @@
             }
         });
     });
-    //删除按钮
-    $("#del_but input").button();
-    $("#del_but input").click(function () {
+    //导出按钮
+    $("#output_but input").button();
+    $("#output_but input").click(function () {
         var myList = "id=";
         $.map($(".templatef li"), function (x) {
             if ($(x).attr("value") == "1") {
@@ -141,7 +154,7 @@
             $.ajax({
                 cache: false,
                 type: "POST",
-                url: "delReport",
+                url: "outputReport",
                 data: myList,
                 async: false,
                 error: function (request) {
@@ -151,8 +164,8 @@
                 success: function (data) {
                     var jsonObj = JSON.parse(data);
                     if (jsonObj.Success) {
-                        alert("删除成功");
-                        getPage("delReport");
+                        alert("成功");
+                        window.location.href = jsonObj.html;
                     } else {
                         //否则显示错误信息
                         if (jsonObj.errID == 303) {
@@ -186,6 +199,43 @@
         }
     });
     $.map($(".templatef li"), function (x) {
+
+        $(x).find(".template_button span").click(function () {
+            var ts = $(this).parent().parent().find(".template_pos").text().replace(/.xls$/, ".html").substr(17);
+            $.ajax({
+                cache: false,
+                type: "get",
+                url: ts,
+                data: "",
+                async: false,
+                error: function (request) {
+                    alert('加载失败');
+                },
+                success: function (data) {
+                    $("#main").hide();
+                    $("#previewBox").html(data);
+
+                    $("#previewBox center").append(
+                            "<input id='cenreturn' type='button' value='返回'>"
+                    );
+                    var imgbox = $('#previewBox img');
+                    for (var imgid = 0; imgid < imgbox.length; imgid++) {
+                        var s = $(imgbox[imgid]).attr('src');
+                        $(imgbox[imgid]).attr('src', 'static/data/experimentalType/' + s);
+                    }
+                    $("#cenreturn").click(function () {
+                        $(".ui-dialog").hide();
+                        $("#main").show();
+                        $("#previewBox").html("");
+                    });
+                    $("#previewBox center").dialog({
+                        resizable: false
+                    });
+                }
+            });
+            return false;
+        });
+
         $(x).click(function () {
             var v = $(this).attr("value");
             if (v == "0") {
@@ -200,5 +250,5 @@
     function my_exit_() {
         return true;
     }
-    _my_loadOver("delEquipment");
+    _my_loadOver("editEquipment");
 </script>

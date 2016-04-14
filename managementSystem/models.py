@@ -87,7 +87,7 @@ class EquipmentType(models.Model):
   templatePositions = models.FileField(upload_to='./managementSystem/static/data/EquipmentType')  # 模板位置
   templateName = models.CharField(max_length=200, null=True, default="")
   indexKey = models.CharField(max_length=200, null=True, default="")
-
+  DirectParent = models.IntegerField(null=True, default=-1)
 
 class Equipment(models.Model):
   EquipmentName = models.CharField(max_length=200)
