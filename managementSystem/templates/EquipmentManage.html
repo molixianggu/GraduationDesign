@@ -1,13 +1,13 @@
 <style>
     #main li {
-        cursor: pointer;
+        cursor: default;
         height: 18px;
-        border: 1px solid #000000;
         padding: 3px;
         margin: 2px;
         margin-right: 80px;
         display: none;
         list-style-type: square;
+        -moz-user-select:-moz-none;
     }
 
     #main .name {
@@ -36,7 +36,10 @@
         float: right;
         margin-right: 15px;
         font-size: 15px;
-        color: #003eff;
+        color: #0040ff;
+    }
+    #main .EquiType_but span{
+        cursor: pointer;
     }
 </style>
 </head>
@@ -47,21 +50,24 @@
 </div>
 <div id="main">
     <ul id="root">
-        <li id="item_-1" value="0">
+        <li id="item_-1" value="0" onselectstart="return false;">
             <div class="name">所有设备</div>
+            <div class="EquiType_but">
+                <span class="add">增加子项</span>
+            </div>
         </li>
 
     </ul>
+    <div class="upWindow"></div>
 </div>
 <script type="text/javascript">
     var items = {{ tree|safe }};
     function new_li(item) {
-        return '<li id="item_' + item.id + '" value="1">' +
+        return '<li id="item_' + item.id + '" value="1" onselectstart="return false;">' +
                 '<div class="name">' + item.inf.templateName + '</div>' +
                 '<div class="category">[' + item.inf.category + ']</div>' +
                 '<div class="EquiType_but">' +
                 '<span class="add">增加子项</span> | ' +
-                '<span class="par">预览</span> | ' +
                 '<span class="change">修改</span> | ' +
                 '<span class="del">删除</span>' +
                 '</div>' +
@@ -93,12 +99,64 @@
         });
     });
     $("#item_-1").show();
-    $.map($(".numberBox"), function (x) {
+    $.map($(".numberBox"), function (x) {//文件数, 输入框
         $(x).click(function () {
             return false;
         });
     });
+    $.map($(".add"), function (x) {
+        $(x).click(function () {
+            var self = this;
+            $.ajax({
+                cache: false,
+                type: "post",
+                url: "uploadForm",
+                data: "type=getForm",
+                async: false,
+                error: function (request) {
+                    alert('加载失败');
+                },
+                success: function (data) {
+                    $(".upWindow").html(data);
+                    var name = $(self).parent().prevAll(".name").text();
+                    var id = $(self).parent().parent().attr("id").split("_")[1];
+                    $("#id_DirectParent").attr("value", name);
+                    $(".upWindow").dialog({
+                        resizable: false,
+                        title: "添加设备节点",
+                        resizable: false,
+                        width: 350,
+                        modal : true,
+                        buttons: {
+                            "确定": function () {
+                                alert($(".upload_form").serialize());
+{#                                    $.ajax({#}
+{#                                        cache: false,#}
+{#                                        type: "POST",#}
+{#                                        url: "upload",#}
+{#                                        data: $("#load-form").serialize() + "type=postForm",#}
+{#                                        async: false,#}
+{#                                        error: function (request) {#}
+{#                                            alert('加载失败');#}
+{#                                        },#}
+{#                                        success: function (data) {#}
+{#                                            alert("成功");#}
+{#                                        }#}
+{#                                    });#}
+{#                                  $("#uploadBox").dialog("close");#}
+                            },
+                            "取消": function () {
+                                $(".upWindow").dialog("close");
+                            }
+                        }
+                    });
+                }
+            });
+            return false;
+        });
+    });
     function my_exit_() {
+        $(".ui-dialog").remove();
         return true;
     }
     _my_loadOver("EquipmentManage");

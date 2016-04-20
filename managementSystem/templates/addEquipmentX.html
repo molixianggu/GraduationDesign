@@ -1,0 +1,25 @@
+<style>
+    #upload_form .box{
+        height: 23px;
+        margin: 8px;
+    }
+    #upload_form .label{
+        float: left;
+        width: 103px;
+    }
+    #upload_form .con{
+    }
+</style>
+
+<form id="upload_form" method="post">
+    {% for field in uploadForm %}
+        <div class="box">
+            <div class="label">{{ field.label_tag }}</div>
+            <div class="con">{{ field }}</div>
+        </div>
+    {% endfor %}
+</form>
+<script>
+    $("#id_DirectParent").attr("disabled", "true");
+    $("label[for=id_templatePositions]").hide();
+</script>

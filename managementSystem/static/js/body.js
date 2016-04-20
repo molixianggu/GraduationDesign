@@ -25,6 +25,20 @@ function my_exit_(){
   return true;
 }
 $(function(){
+  //主题改变事件
+  $("#changeTheme").click(function(){
+      $(".theme").slideToggle("slow", function(){
+        $("#plae-theme").click(function(){
+          $.cookie("theme", "pale");
+          location.reload(true);
+        });
+        $("#bule-theme").click(function(){
+          $.cookie("theme", "bule");
+          location.reload(true);
+        });
+      });
+  });
+
   //添加父li标签展开事件
   $(".par").click(function(){
     var li_obj = $(".par");

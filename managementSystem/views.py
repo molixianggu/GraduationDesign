@@ -21,6 +21,8 @@ from managementSystem.models import *
 import managementSystem.function
 
 import managementSystem.MyForm as MyForm
+#   #[0-9a-fA-F]{3,6}
+
 
 def index(request):
     if request.method == 'GET':
@@ -66,7 +68,7 @@ def Console(request):
     if request.method == 'GET':
         return render_to_response(
           'index.html',
-            Context({})
+          Context({'theme':request.COOKIES.get("theme", 'pale')})
         )
     elif request.method == 'POST':
       if managementSystem.function.jurisdiction('addReport.html', u.levelName):
@@ -115,6 +117,20 @@ def upload(request):
           content='上传了设备文件[' + request.POST['name'] + ']'
         )
   return HttpResponse()
+
+def uploadForm(request):
+  if request.method != 'POST':
+    return HttpResponse()
+  b, u = managementSystem.function.verification_cookie(request)
+  if not b:
+    return HttpResponseRedirect('/')
+  if managementSystem.function.jurisdiction('EquipmentManage.html', u.levelName):
+    if request.POST.get("type", "") == "getForm":
+      uf = MyForm.UpLoadForm()
+      return render_to_response('addEquipmentX.html', {'uploadForm': uf})
+  return HttpResponse()
+
+#添加用户
 def addUser(request):
     if request.method != 'POST':
         return HttpResponse()
@@ -152,7 +168,7 @@ def addUser(request):
         html = HttpResponse(json.dumps({
           'Success': rul,
           'errID':0,
-            'html': ''
+          'html': ''
         }))
         if rul:
             mylogs.objects.create(
@@ -164,6 +180,8 @@ def addUser(request):
             u.loginIP = request.META['REMOTE_ADDR']
             u.save()
         return html
+
+#删除用户
 def delUser(request):
     if request.method != 'POST':
       return HttpResponse()
@@ -194,7 +212,7 @@ def delUser(request):
     }))
     return html
 
-
+#删除实验
 def delReport(request):
   if request.method != 'POST':
     return HttpResponse()
@@ -230,7 +248,7 @@ def delReport(request):
   }))
   return html
 
-
+#导出实验
 def outputReport(request):
   if request.method != 'POST':
     return HttpResponse()
@@ -296,6 +314,8 @@ def preview(request):
   return html
 
 
+
+#修改权限
 def changeJuris(request):
   if request.method != 'POST':
     return HttpResponse()
@@ -331,3 +351,5 @@ def changeJuris(request):
     'html': ''
   }))
   return html
+# def myTest(request):
+#   return HttpResponse('<h2>收到了你的' + request.method + '消息:</h2>' + ', '.join([str(x) for x in request.GET.items()]))

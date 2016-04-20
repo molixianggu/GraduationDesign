@@ -1,7 +1,6 @@
 <style>
     #main {
         height: 500px;
-        background-color: #0077cc;
     }
 
     #ch_select {
@@ -32,7 +31,6 @@
     #main ul {
         overflow: auto;
         height: 400px;
-        background-color: #5690D2;
         margin: 8px 0px;
         margin-bottom: 3px;
     }
@@ -43,8 +41,6 @@
 
     #main li {
         padding: 10px 15px;
-        border: 2px solid #ffffff;
-        background-color: #5690D2;
         width: 90%;
         height: 22px;
         margin: 3px;
@@ -124,6 +120,7 @@
         $(template[i]).find(".template_key").text(getLocalTime($(template[i]).find(".template_key").text()));
         //点击事件
     }
+    var b_color = $(".templatef li").css("background-color");
     //全选按钮
     $("#ch_select #all").click(function () {
         $.map($(".templatef li"), function (x) {
@@ -136,7 +133,7 @@
     $("#ch_select #unall").click(function () {
         $.map($(".templatef li"), function (x) {
             if ($(x).css("display") != "none") {
-                $(x).css("background-color", "#5690D2");
+                $(x).css("background-color", b_color);
                 $(x).attr("value", "0");
             }
         });
@@ -242,7 +239,7 @@
                 $(this).css("background-color", "#56f0ff");
                 $(this).attr("value", "1");
             } else {
-                $(this).css("background-color", "#5690D2");
+                $(this).css("background-color", b_color);
                 $(this).attr("value", "0");
             }
         });

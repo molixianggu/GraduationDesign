@@ -1,5 +1,6 @@
 #my_body{
     width: 100%;
+    min-width: 1000px;
     height: 560px;
     margin-top: 69px;
 }
@@ -50,11 +51,13 @@
 }
 .sub_meun li:hover{
   font-weight: bold;
+  background-color: #ffffff;
 }
 #rightBox{
-  float: left;
+  float: right;
   height: 500px;
   width: 80%;
+  min-width: 800px;
 }
 #body_head{
   height: 40px;
@@ -76,6 +79,10 @@
   float: left;
   margin: 25px;
 }
+.sub_title #logs li{
+  border: none;
+}
+
 .more{
   float: right;
   margin: auto 15px;
@@ -134,3 +141,7 @@
 .ref {
   cursor: pointer;
 }
+.theme{
+  display: none;
+}
+

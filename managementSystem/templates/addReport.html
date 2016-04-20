@@ -2,7 +2,6 @@
 <style>
   #main{
     height: 500px;
-    background-color: #0077cc;
   }
   #search{
     height: 30px;
@@ -17,7 +16,6 @@
   #main ul{
     overflow:auto;
     height: 400px;
-    background-color: #5690D2;
   }
   .template_key{
     display: none;
@@ -28,9 +26,8 @@
   }
   #main li{
     padding: 10px 15px;
-    border:2px solid #ffffff;
     width: 90%;
-      height: 22px;
+    height: 22px;
     margin: 3px;
     list-style-type: none;
   }
@@ -83,6 +80,8 @@
       </li>
     {% endfor %}
   </ul>
+    <div id="uploadBox"></div>
+
 </div>
 <script>
     var DownloadPath = "";
@@ -130,6 +129,49 @@
       $(template[i]).find(".download").click(function () {
           window.location.href = $(this).parent().parent().find(".template_pos").text().substr(17);
       });
+              $(template[i]).find(".upload").click(function () {
+            $.ajax({
+                cache: false,
+                type: "POST",
+                url: "upload",
+                data: "type=getForm",
+                async: false,
+                error: function (request) {
+                    alert('加载失败');
+                },
+                success: function (data) {
+                    $("#uploadBox").html(data);
+                    $("#uploadBox").dialog({
+                        title: "上传文件",
+                        resizable: false,
+                        width: 350,
+                        modal : true,
+                        buttons: {
+                            "确定": function () {
+                                alert($("#load_form").serialize());
+                                {#                                    $.ajax({#}
+                                {#                                        cache: false,#}
+                                {#                                        type: "POST",#}
+                                {#                                        url: "upload",#}
+                                {#                                        data: $("#load-form").serialize() + "type=postForm",#}
+                                {#                                        async: false,#}
+                                {#                                        error: function (request) {#}
+                                {#                                            alert('加载失败');#}
+                                {#                                        },#}
+                                {#                                        success: function (data) {#}
+                                {#                                            alert("成功");#}
+                                {#                                        }#}
+                                {#                                    });#}
+                                {#                                  $("#uploadBox").dialog("close");#}
+                            },
+                            "取消": function () {
+                                $("#uploadBox").dialog("close");
+                            }
+                        }
+                    });
+                }
+            });
+        });
   }
     {#  $("#search input").autocomplete({#}
     {#      source: my_list#}

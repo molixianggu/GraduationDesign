@@ -1,0 +1,12 @@
+#main {
+    background-color: #eee;
+}
+#main ul{
+    background-color: #fff;
+}
+#main li{
+    border:1px solid #000;
+}
+.ui-button{
+    background-color: #00CCFF;
+}

@@ -49,3 +49,14 @@ class RegisterForm(forms.Form):
 
 class importReport(forms.Form):
   file = forms.FileField()
+
+
+class UpLoadForm(forms.Form):
+    DirectParent = forms.CharField(
+        max_length=32,
+        label = '父节点',
+    )
+    category = forms.CharField(
+        max_length=32,
+        label = '名称',
+    )

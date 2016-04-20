@@ -1,0 +1,103 @@
+<style>
+    #main {
+        height: 430px;
+        min-width: 784px;
+    }
+
+    #search input {
+        height: 20px;
+        width: 150px;
+        font-size: 18px;
+    }
+
+    #main ul {
+        padding: 8px;
+        overflow: auto;
+        height: 100%;
+    }
+
+    .log_id {
+        display: none;
+    }
+
+    #main li {
+        padding: 9px 15px;
+        border-width: 1px;
+        width: 96%;
+        height: 18px;
+        margin: 3px;
+        list-style-type: none;
+    }
+
+    .log-class .log-name {
+        margin: 0px 8px;
+        float: left;
+    }
+
+    .log-class .log-content {
+        float: left;
+    }
+
+    .log-button div {
+        height: 26px;
+        width: 26px;
+    }
+
+    .log_button div img {
+        cursor: pointer;
+        float: right;
+    }
+    #main #headBox{
+        margin-right: 40px;
+        margin-left: 20px;
+        height: 22px;
+    }
+    #main #rul{
+        float: right;
+        cursor: pointer;
+    }
+    #tit{
+        float: left;
+        font-size: 18px;
+        color: #505050;
+    }
+    #tit span:hover{
+        color: #000000;
+        font-size: 20px;
+    }
+    .log-con-d{
+        color: #303030;
+        font-size: 14px;
+        margin-left: 25px;
+    }
+</style>
+<div id="body_head">
+    <span class="title">设备历史</span>
+    <span class="ref">刷新</span>
+</div>
+<div id="main">
+    <div id="headBox"><div id="tit">[<span>三相少油断路器试验报告</span>]历史记录</div> <span id="rul">&lt;&lt;返回</span></div>
+    <ul>
+        {% for log in logsList %}
+            <li class="log-class">
+
+                <div class="log-name">{{ forloop.counter }} {{ log.user.nickName }}</div>
+                <div class="log-content">
+                    在<span class="_time">{{ log.time|date:"Y-m-d l  H:i:s" }}</span>
+                    <span class="log-con-event">{{ log.content }}</span>了
+                    <span class="log-con-event">[{{ log.equ.templateName }}]</span>
+                    <span class="log-con-d">({{ log.time|timesince }})</span>
+                </div>
+                <div class="log_id">{{ log.id }}</div>
+            </li>
+        {% endfor %}
+    </ul>
+</div>
+<script>
+
+    function my_exit_() {
+        return true;
+    }
+    _my_loadOver("EquipmentLogs");
+</script>
+

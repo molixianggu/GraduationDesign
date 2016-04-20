@@ -12,6 +12,8 @@ class Admin(models.Model):
     checkAdmin = models.BooleanField()              #审核中
     loginIP = models.CharField(max_length = 20)     #登录IP
     loginTime = models.IntegerField()               #登录时间
+    def __str__(self):
+      return self.nickName
 
 
 class adminGroup(models.Model):
@@ -67,20 +69,24 @@ class mylogs(models.Model):
     user = models.ForeignKey(Admin, related_name='actions')
     time = models.CharField(max_length = 128)
     content = models.CharField(max_length = 200, null = True)
+    def __str__(self):
+      return self.user.nickName + self.content
 
 class experimentalType(models.Model):
   category = models.CharField(max_length=200)  # 所属分类
   templatePositions = models.FileField(upload_to='./managementSystem/static/data/experimentalType')  # 模板位置
   templateName = models.CharField(max_length=200, null=True, default="")
   indexKey = models.CharField(max_length=200, null=True, default="")
-
+  def __str__(self):
+    return self.templateName
 
 class experimental(models.Model):
   experimentalName = models.CharField(max_length=200)
   file = models.FileField(upload_to='./managementSystem/static/data/experimental')
   PeopleUpload = models.ForeignKey(Admin, related_name='experimentals')
   uploadTime = models.IntegerField(null=True, default=0)
-
+  def __str__(self):
+    return self.experimentalName
 
 class EquipmentType(models.Model):
   category = models.CharField(max_length=200)  # 所属分类
@@ -88,12 +94,24 @@ class EquipmentType(models.Model):
   templateName = models.CharField(max_length=200, null=True, default="")
   indexKey = models.CharField(max_length=200, null=True, default="")
   DirectParent = models.IntegerField(null=True, default=-1)
+  def __str__(self):
+    return self.templateName
+
+class EquipmentLogs(models.Model):
+    user = models.ForeignKey(Admin, related_name='equipmentUsers')
+    time  = models.DateTimeField()
+    equ = models.ForeignKey(EquipmentType, related_name='equipments')
+    content = models.CharField(max_length = 200, null = True)
+    def __str__(self):
+      return self.content + self.equ.templateName
 
 class Equipment(models.Model):
   EquipmentName = models.CharField(max_length=200)
   file = models.FileField(upload_to='./managementSystem/static/data/Equipment')
   PeopleUpload = models.ForeignKey(Admin, related_name='Equipments')
   uploadTime = models.IntegerField(null=True, default=0)
+  def __str__(self):
+    return self.EquipmentName
 
 # devicetyperuler = blob
 #    dataindex = models.CharField(max_length = 1024, null = True)
@@ -110,3 +128,4 @@ admin.site.register(experimentalType)
 admin.site.register(experimental)
 admin.site.register(Equipment)
 admin.site.register(EquipmentType)
+admin.site.register(EquipmentLogs)

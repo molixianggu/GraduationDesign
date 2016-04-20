@@ -14,6 +14,7 @@
     <link rel="stylesheet" href="/static/css/body.css">
     <link rel="stylesheet" href="/static/css/font.css">
     <link rel="stylesheet" href="/static/css/window.css">
+    <link rel="stylesheet" href="/static/css/theme/{{ theme }}.css">
 
     <script src="/static/js/jquery/jquery-1.11.3.js"></script>
     <script src="/static/js/jquery/jquery-ui-1.11.4.custom/jquery-ui.js"></script>
@@ -38,6 +39,13 @@
               <span>你好，游客</span><img id="put_but" src="static/img/back_hover.png">
             <div id="downBox">
               <ul>
+                <li id="changeTheme">
+                    改变主题
+                    <ul class="theme">
+                        <li id="plae-theme">灰白</li>
+                        <li id="bule-theme">蓝白</li>
+                    </ul>
+                </li>
                 <li>修改信息</li>
                 <li>管理密码</li>
                 <hr align="center" width="80%" />
@@ -81,10 +89,10 @@
                   <li id="addEquipment">添加设备</li>
                   <li id="findEquipment">设备检索</li>
                   <li id="delEquipment">设备下线</li>
-                  <li id="equipmentView">浏览设备信息</li>
+{#                  <li id="equipmentView">浏览设备信息</li>#}
                   <li id="editEquipment">编辑设备信息</li>
-                  <li id="equipmentLogs">查看设备历史</li>
-                <li>设备诊断库配置</li>
+                  <li id="EquipmentLogs">查看设备历史</li>
+{#                <li>设备诊断库配置</li>#}
               </ul>
             </li>
             <li class="par"><div>设备类型管理</div>
@@ -97,7 +105,7 @@
             </li>
             <li class="par"><div>变配电所管理</div>
               <ul class="sub_meun">
-                <li>变配电所检索</li>
+                <li id="PowerDistribution">变配电所检索</li>
                 <li>新增变配电所</li>
                 <li>编辑变配电所信息</li>
                 <li>删除变配电所</li>
@@ -109,6 +117,7 @@
                 <li id="userManagement">用户管理</li>
                   <li id="JurisdictionManage">权限管理</li>
                   <li id="logsManage">日志查看</li>
+                  <li id="a">更新日志</li>
                   {#                  <li id="dataManage">数据管理</li>#}
                   {#                  <li id="sysentManage">功能模块管理</li>#}
               </ul>

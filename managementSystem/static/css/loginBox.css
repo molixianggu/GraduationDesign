@@ -67,3 +67,9 @@ body{
   float: right;
   padding-top: 105px;
 }
+#logintit{
+    position: fixed;
+    z-index:9;
+    top: 100px;
+    left: 150px;
+}

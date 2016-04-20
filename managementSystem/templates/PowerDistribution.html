@@ -1,0 +1,143 @@
+<style>
+    #main {
+        height: 500px;
+    }
+
+    #search {
+        height: 30px;
+        padding: 10px;
+        margin-left: 35%;
+    }
+
+    #search input {
+        height: 20px;
+        width: 150px;
+        font-size: 18px;
+    }
+
+    #main ul {
+        overflow: auto;
+        height: 400px;
+    }
+
+    .template_key {
+        display: none;
+    }
+
+    .template_id {
+        display: none;
+    }
+
+    #main li {
+        padding: 10px 15px;
+        width: 90%;
+        height: 22px;
+        margin: 3px;
+        list-style-type: none;
+    }
+
+    .template_name {
+        float: left;
+    }
+
+    .template_category {
+        float: left;
+        margin-left: 1%;
+        font-size: 14px;
+        color: #444444;
+    }
+
+    .template_button {
+        float: right;
+        margin-left: 10%;
+    }
+
+    .template_button span {
+        margin: 1px 3px;
+        cursor: pointer;
+    }
+
+    .template_pos {
+        display: none;
+    }
+    .Vimg{
+        position:relative;
+    }
+    .v{
+        position:absolute;
+    }
+</style>
+<div id="body_head">
+    <span class="title">变配电所检索</span>
+    <span class="ref">刷新</span>
+</div>
+<div id="main">
+    <div id="search">
+{#        快速搜索：#}
+{#        <input value="" autocomplete="off">#}
+    </div>
+    <ul>
+        <li class="template">
+            <div class="template_name">变电所主接线图A</div>
+            <div class="template_category"></div>
+            <div class="template_id">0</div>
+            <div class="template_key"></div>
+            <div class="template_pos"><img class="v" src="static\data\变电所主接线图A.jpg"></div>
+            <div class="template_button">
+                <span class="preview">预览</span>
+            </div>
+        </li>
+        <li class="template">
+            <div class="template_name">变电所主接线图B</div>
+            <div class="template_category"></div>
+            <div class="template_id">0</div>
+            <div class="template_key"></div>
+            <div class="template_pos"><img class="v" src="static\data\变电所主接线图B.jpg"></div>
+            <div class="template_button">
+                <span class="preview">预览</span>
+            </div>
+        </li>
+    </ul>
+    <div class="Vimg"></div>
+</div>
+<div id="uploadBox"></div>
+<script>
+    $.map($(".preview"), function(x){
+        $(x).click(function(){
+            $(".Vimg").html($(this).parent().prev().html());
+            $(".Vimg").dialog({
+                title: "预览",
+                resizable: false,
+                modal : true,
+                width: 920,
+                height: 500,
+            });
+            $(document).ready(function() {
+                $(".v").bind("mousewheel", function() {
+                    zoomImg(this);
+                    return false;
+                });
+            });
+
+            $(".v").draggable({disabled: false});
+        });
+    });
+
+    function zoomImg(o) {
+        var zoom = parseInt(o.style.zoom, 10) || 100;
+        zoom += event.wheelDelta / 10; //可适合修改
+        if (zoom > 28)
+            o.style.zoom = zoom + '%';
+    }
+    $(".v").mousedown(function(){
+        $(this).css("cursor","move");
+    });
+    $(".v").mouseup(function(){
+        $(this).css("cursor","default");
+    });
+    function my_exit_() {
+        $(".Vimg").remove();
+        return true;
+    }
+    _my_loadOver("PowerDistribution");
+</script>
