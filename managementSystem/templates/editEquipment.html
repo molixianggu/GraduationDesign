@@ -147,11 +147,11 @@
                 myList += ($(x).find(".template_id").text() + ",");
             }
         });
-        if (myList.length > 0) {
+        if (myList.length > 3) {
             $.ajax({
                 cache: false,
                 type: "POST",
-                url: "outputReport",
+                url: "outEqu",
                 data: myList,
                 async: false,
                 error: function (request) {

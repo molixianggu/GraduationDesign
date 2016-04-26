@@ -31,5 +31,7 @@ urlpatterns = [
     url(r'outputReport', outputReport, name='outputReport'),
     url(r'upload$', upload, name='upload'),
     url(r'uploadForm', uploadForm, name='uploadForm'),
+    url(r'delEqu', delEqu, name='delEqu'),
+    url(r'outEqu', outEqu, name='outEqu'),
     # url(r'myTest', myTest)
 ]

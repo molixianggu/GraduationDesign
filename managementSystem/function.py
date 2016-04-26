@@ -140,7 +140,12 @@ def getDict(pageName):
 0.5.1版本 更新 : #2016年4月20日23:42:35
 1. 新增变配电所预览时的拖动和缩放功能
 
-
+0.8.2版本 更新 : #2016年4月27日01:57:45
+1. 新增ajax上传文件
+2. 修改了原来的设备数据库, 更符合结构关系
+3. 新增导出和删除设备
+4. 修改了设备类型数据库的表示方式, 并添加了默认值
+5. 实现增加子项功能
 
 '''
       }
@@ -170,14 +175,14 @@ def jurisdiction(pageName, lv):     #修改权限
   return d.get(pageName, 10) <= lv
 
 
-def zipPack(fileList):
+def zipPack(fileList, mT):
   l = [x for x in fileList.split(',') if x]
   if len(l) <= 1:
-    return experimental.objects.get(id=int(l[0])).file.name[17:]
+    return mT.objects.get(id=int(l[0])).file.name[17:]
   filename = os.path.join(r'managementSystem\static\data\zipPack', str(int(time.time())) + '.zip')
   with zipfile.ZipFile(filename, 'w', zipfile.ZIP_DEFLATED) as f:
     for _id in fileList.split(','):
       if _id:
-        e = experimental.objects.get(id=int(_id))
-        f.write(e.file.name, arcname=e.experimentalName)
+        e = mT.objects.get(id=int(_id))
+        f.write(e.file.name, arcname=mT is experimental and e.experimentalName or e.EquipmentName)
   return filename[17:]

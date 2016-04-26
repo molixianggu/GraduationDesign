@@ -129,21 +129,22 @@
                         modal : true,
                         buttons: {
                             "确定": function () {
-                                alert($(".upload_form").serialize());
-{#                                    $.ajax({#}
-{#                                        cache: false,#}
-{#                                        type: "POST",#}
-{#                                        url: "upload",#}
-{#                                        data: $("#load-form").serialize() + "type=postForm",#}
-{#                                        async: false,#}
-{#                                        error: function (request) {#}
-{#                                            alert('加载失败');#}
-{#                                        },#}
-{#                                        success: function (data) {#}
-{#                                            alert("成功");#}
-{#                                        }#}
-{#                                    });#}
-{#                                  $("#uploadBox").dialog("close");#}
+                                    var d = "type=postForm&id=" + id + "&name=" + $("#id_category").val();
+                                    $.ajax({
+                                        cache: false,
+                                        type: "POST",
+                                        url: "uploadForm",
+                                        data: d,
+                                        async: false,
+                                        error: function (request) {
+                                            alert('加载失败');
+                                        },
+                                        success: function (data) {
+                                            alert("添加成功");
+                                        }
+                                    });
+                                 $(".upWindow").dialog("close");
+                                 getPage("EquipmentManage");
                             },
                             "取消": function () {
                                 $(".upWindow").dialog("close");
@@ -156,7 +157,7 @@
         });
     });
     function my_exit_() {
-        $(".ui-dialog").remove();
+        $(".upWindow").html("");
         return true;
     }
     _my_loadOver("EquipmentManage");

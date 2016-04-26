@@ -133,11 +133,11 @@
                 myList += ($(x).find(".template_id").text() + ",");
             }
         });
-        if (myList.length > 0) {
+        if (myList.length > 3) {
             $.ajax({
                 cache: false,
                 type: "POST",
-                url: "delReport",
+                url: "delEqu",
                 data: myList,
                 async: false,
                 error: function (request) {
@@ -148,7 +148,7 @@
                     var jsonObj = JSON.parse(data);
                     if (jsonObj.Success) {
                         alert("删除成功");
-                        getPage("delReport");
+                        getPage("delEquipment");
                     } else {
                         //否则显示错误信息
                         if (jsonObj.errID == 303) {

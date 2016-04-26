@@ -17,9 +17,13 @@
     <span class="ref">刷新</span>
 </div>
 <div id="main">{{ txt|linebreaks }}</div>
+<form id="fff">
+    <input value="1234">
+</form>
 
 <script>
-
+    var fff = new FormData($("#fff")[0]);
+    alert(fff);
     function my_exit_() {
         return true;
     }

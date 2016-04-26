@@ -19,6 +19,7 @@
 #head_menu #main_ico{
   height: 55px;
   width: 55px;
+  border-radius: 27px;
 }
 #head_menu #main_ico:hover{
   width: 60px;

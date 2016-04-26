@@ -2,6 +2,8 @@ from django.db import models
 
 from django.contrib import admin
 
+import django.utils.timezone as timezone
+
 class Admin(models.Model):
     userName = models.CharField(max_length = 30)    #用户名
     passWord = models.CharField(max_length = 32)    #密码
@@ -89,17 +91,17 @@ class experimental(models.Model):
     return self.experimentalName
 
 class EquipmentType(models.Model):
-  category = models.CharField(max_length=200)  # 所属分类
-  templatePositions = models.FileField(upload_to='./managementSystem/static/data/EquipmentType')  # 模板位置
+  category = models.CharField(max_length=200, null=True, default="无")  # 所属分类
+  templatePositions = models.FileField(upload_to='./managementSystem/static/data/EquipmentType', null=True, default="空")  # 模板位置
   templateName = models.CharField(max_length=200, null=True, default="")
-  indexKey = models.CharField(max_length=200, null=True, default="")
+  indexKey = models.CharField(max_length=200, null=True, default="空")
   DirectParent = models.IntegerField(null=True, default=-1)
   def __str__(self):
     return self.templateName
 
 class EquipmentLogs(models.Model):
     user = models.ForeignKey(Admin, related_name='equipmentUsers')
-    time  = models.DateTimeField()
+    time  = models.DateTimeField(default = timezone.now, null = True)
     equ = models.ForeignKey(EquipmentType, related_name='equipments')
     content = models.CharField(max_length = 200, null = True)
     def __str__(self):
@@ -110,6 +112,7 @@ class Equipment(models.Model):
   file = models.FileField(upload_to='./managementSystem/static/data/Equipment')
   PeopleUpload = models.ForeignKey(Admin, related_name='Equipments')
   uploadTime = models.IntegerField(null=True, default=0)
+  Type = models.IntegerField(null=True, default=0)
   def __str__(self):
     return self.EquipmentName
 

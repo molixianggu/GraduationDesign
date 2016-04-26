@@ -6,6 +6,8 @@ from django.http import HttpResponse,HttpResponseRedirect
 
 from django.template import RequestContext      #验证
 
+import datetime
+
 from urllib.request import quote
 
 import os
@@ -101,20 +103,27 @@ def upload(request):
     if request.POST.get("type", "") == "getForm":
       uf = MyForm.importReport()
       return render_to_response('loadTemplate.html', {'FileForm': uf})
-    elif request.POST.get("type", "") == "postForm":
+    else:
       uf = MyForm.importReport(request.POST, request.FILES)
-      print(request.POST)
+      pid = request.POST.get("pid", "")
+      equType = EquipmentType.objects.get(id=pid);
       if uf.is_valid():
         Equipment.objects.create(  # 写入数据库
           EquipmentName=os.path.splitext(request.POST['name'])[0],
           file=uf.cleaned_data['file'],
           PeopleUpload=u,
-          uploadTime=int(time())
+          uploadTime=int(time()),
+          Type=pid
         )
         mylogs.objects.create(
           user_id=u.id,
           time=strftime('%Y-%m-%d %H:%M'),
           content='上传了设备文件[' + request.POST['name'] + ']'
+        )
+        EquipmentLogs.objects.create(
+              user = u,
+              equ = equType,
+              content = "上传了"
         )
   return HttpResponse()
 
@@ -125,10 +134,27 @@ def uploadForm(request):
   if not b:
     return HttpResponseRedirect('/')
   if managementSystem.function.jurisdiction('EquipmentManage.html', u.levelName):
+
     if request.POST.get("type", "") == "getForm":
       uf = MyForm.UpLoadForm()
       return render_to_response('addEquipmentX.html', {'uploadForm': uf})
+    elif request.POST.get("type", "") == "postForm":
+      equType = EquipmentType.objects.create(
+        templateName = request.POST.get("name"),
+        DirectParent = int(request.POST.get("id"))
+      )
+      mylogs.objects.create(
+        user_id=u.id,
+        time=strftime('%Y-%m-%d %H:%M'),
+        content='上传了设备文件[' + request.POST['name'] + ']'
+      )
+      EquipmentLogs.objects.create(
+        user = u,
+        equ = equType,
+        content = "添加了节点"
+      )
   return HttpResponse()
+
 
 #添加用户
 def addUser(request):
@@ -260,7 +286,7 @@ def outputReport(request):
   if len(fileList) <= 0:
     errID = 400
   elif managementSystem.function.jurisdiction('outputReport.html', u.levelName):
-    fileName = managementSystem.function.zipPack(fileList)
+    fileName = managementSystem.function.zipPack(fileList, experimental)
     mylogs.objects.create(
       user_id=u.id,
       time=strftime('%Y-%m-%d %H:%M'),
@@ -275,6 +301,77 @@ def outputReport(request):
     'html': fileName
   }))
   return html
+
+def delEqu(request):
+  if request.method != 'POST':
+    return HttpResponse()
+  b, u = managementSystem.function.verification_cookie(request)
+  if not b:
+    return HttpResponseRedirect('/')
+  Success, errID = False, 0
+  reqList = request.POST.get("id", "")
+  if len(reqList) <= 0:
+    errID = 400
+  elif managementSystem.function.jurisdiction('delEquipment.html', u.levelName):
+    def mydel(x):
+      e = Equipment.objects.get(id=int(x))
+      try:
+        os.remove(e.file.name)
+        os.remove(e.file.name.replace('.xls', '.html'))
+      except FileNotFoundError:
+        pass
+      mylogs.objects.create(
+        user_id=u.id,
+        time=strftime('%Y-%m-%d %H:%M'),
+        content='下线设备[' + e.EquipmentName + ']'
+      )
+      EquipmentLogs.objects.create(
+        user = u,
+        equ = EquipmentType.objects.get(id=e.Type),
+        content = "删除了"
+      )
+      e.delete()
+    for _id in reqList.split(','):
+      if _id:
+        mydel(_id)
+    Success = True
+  else:
+    errID = 303
+  html = HttpResponse(json.dumps({
+    'Success': Success,
+    'errID': errID,
+    'html': ''
+  }))
+  return html
+
+def outEqu(request):
+  if request.method != 'POST':
+    return HttpResponse()
+  b, u = managementSystem.function.verification_cookie(request)
+  if not b:
+    return HttpResponseRedirect('/')
+  Success, errID, fileName = False, 0, ''
+  fileList = request.POST.get("id", "")
+  if len(fileList) <= 0:
+    errID = 400
+  elif managementSystem.function.jurisdiction('editEquipment.html', u.levelName):
+    fileName = managementSystem.function.zipPack(fileList, Equipment)
+    mylogs.objects.create(
+      user_id=u.id,
+      time=strftime('%Y-%m-%d %H:%M'),
+      content='导出编辑设备'
+    )
+    Success = True
+  else:
+    errID = 303
+  html = HttpResponse(json.dumps({
+    'Success': Success,
+    'errID': errID,
+    'html': fileName
+  }))
+  return html
+
+
 
 def getPage(request):
     if request.method != 'POST':
