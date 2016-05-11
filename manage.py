@@ -20,5 +20,6 @@ if __name__ == "__main__":
     if 'new' in sys.argv:
         toHtml('managementSystem/static/data/experimentalType/')
         toHtml('managementSystem/static/data/EquipmentType/')
+        toHtml('managementSystem/static/data/Equipment/')
         sys.argv.remove('new')
     execute_from_command_line(sys.argv)

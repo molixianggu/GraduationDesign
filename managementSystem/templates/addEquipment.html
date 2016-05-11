@@ -1,6 +1,6 @@
 <style>
     #main {
-        height: 500px;
+{#        height: 450px;#}
     }
 
     #search {
@@ -17,7 +17,7 @@
 
     #main ul {
         overflow: auto;
-        height: 400px;
+        height: 380px;
     }
 
     .template_key {
@@ -60,6 +60,11 @@
     .template_pos {
         display: none;
     }
+    #add_but {
+        float: right;
+        margin: 0px 38px;
+        height: 20px;
+    }
 </style>
 <div id="body_head">
     <span class="title">选择设备类型</span>
@@ -67,37 +72,94 @@
 </div>
 <div id="main">
     <div id="search">
-        快速搜索：
-        <input value="" autocomplete="off">
+        <label>
+            快速搜索：
+            <input value="" autocomplete="off">
+        </label>
     </div>
     <ul>
         {% for template in templateList %}
             <li class="template">
-                <div class="template_name">{{ template.templateName }}</div>
-                <div class="template_category">[{{ template.category }}]</div>
+                <div class="template_name">{{ template.EquipmentName }}</div>
+                <div class="template_category">[{{ template.PeopleUpload.nickName }}]</div>
                 <div class="template_id">{{ template.id }}</div>
-                <div class="template_key">{{ template.indexKey }}</div>
-                <div class="template_pos">{{ template.templatePositions.name }}</div>
+                <div class="template_key">{{ template.uploadTime }}</div>
+                <div class="template_pos">{{ template.file.name }}</div>
                 <div class="template_button">
                     <span class="preview">预览</span> |
-                    <span class="upload">上传</span> |
-                    <span class="download">下载空白模板</span>
+                    <span class="download">下载</span>
                 </div>
             </li>
         {% endfor %}
     </ul>
+    <div id="add_but"><input type="button" value="上传文件"></div>
 </div>
+<div id="prView"></div>
 <div id="uploadBox"></div>
 <script>
     var DownloadPath = "";
     var pid;
     var template = $(".template");
     var my_list = [];
+    $("#add_but input").button();
+    $("#add_but input").click(function () {
+        $.ajax({
+            cache: false,
+            type: "POST",
+            url: "upload",
+            data: "type=getForm",
+            async: false,
+            error: function () {
+                alert('加载失败');
+            },
+            success: function (data) {
+                $("#uploadBox").html(data);
+                $("#uploadBox").dialog({
+                    title: "上传文件",
+                    resizable: false,
+                    width: 350,
+                    modal : true,
+                    buttons: {
+                        "确定": function (){
+                            var oData = new FormData();
+                            oData.append("file", $("#id_file")[0].files[0]);
+                            oData.append("name", $("#id_file").val().replace(/^.+?\\([^\\]+?)(\.[^\.\\]*?)?$/gi,"$1"));
+                            var oReq = new XMLHttpRequest();
+                            oReq.open( "POST", "upload" , true);
+                            oReq.onload = function() {
+                                  if (oReq.status == 200) {
+                                      alert("上传成功");
+                                      getPage("addEquipment");
+                                 } else {
+                                      alert("失败");
+                                 }
+                            };
+                            oReq.send(oData);
+                            $("#uploadBox").html("");
+                            $(".ui-dialog").remove();
+                        },
+                        "取消": function () {
+                            $("#uploadBox").html("");
+                            $(".ui-dialog").remove();
+                        }
+                    }
+                });
+            }
+        });
+    });
+
     for (var i = 0; i < template.length; i++) {
         my_list.push($(template[i]).find(".template_name").text());
         //点击事件
         $(template[i]).find(".preview").click(function () {
-            var ts = $(this).parent().parent().find(".template_pos").text().replace(/.xls$/, ".html").substr(17);
+            var mm = $(this).parent().parent().find(".template_pos").text();
+
+            if (mm == "空"){
+                alert("虚拟节点不能预览");
+                return false;
+            }
+
+            var ts = mm.replace(/.xls$/, ".html").substr(17);
             DownloadPath = $(this).parent().parent().find(".template_pos").text().substr(17);
             $.ajax({
                 cache: false,
@@ -105,16 +167,22 @@
                 url: ts,
                 data: "",
                 async: false,
-                error: function (request) {
+                error: function () {
                     alert('加载失败');
                 },
-                success: function (data) {
-                    $("#rightBox").html(data);
-                    $("#rightBox center").append(
+                success: function (parameters) {
+                    var data = parameters;
+                    $("#prView").html(data);
+                    $("#prView").show();
+                    $("#main").hide();
+                    if ($("#prView center").length<=0){
+                        $("#prView").append("<center></center>");
+                    }
+                    $("#prView center").append(
                             "<input id='cendownload' type='button' value='下载'>" +
                             "<input id='cenreturn' type='button' value='返回'>"
                     );
-                    var imgbox = $('#rightBox img');
+                    var imgbox = $('#prView img');
                     for (var imgid = 0; imgid < imgbox.length; imgid++) {
                         var s = $(imgbox[imgid]).attr('src');
                         $(imgbox[imgid]).attr('src', 'static/data/Equipment/' + s);
@@ -124,9 +192,11 @@
                     });
                     $("#cenreturn").click(function () {
                         $(".ui-dialog").hide();
-                        getPage("Equipment");
+                        $("#prView").hide();
+                        $("#main").show();
+
                     });
-                    $("#rightBox center").dialog({
+                    $("#prView center").dialog({
                         resizable: false
                     });
                 }
@@ -134,50 +204,6 @@
         });
         $(template[i]).find(".download").click(function () {
             window.location.href = $(this).parent().parent().find(".template_pos").text().substr(17);
-        });
-        $(template[i]).find(".upload").click(function () {
-            pid = $(this).parent().prevAll(".template_id").text();
-            $.ajax({
-                cache: false,
-                type: "POST",
-                url: "upload",
-                data: "type=getForm",
-                async: false,
-                error: function (request) {
-                    alert('加载失败');
-                },
-                success: function (data) {
-                    $("#uploadBox").html(data);
-                    $("#uploadBox").dialog({
-                        title: "上传文件",
-                        resizable: false,
-                        width: 350,
-                        modal : true,
-                        buttons: {
-                            "确定": function (){
-                                var oData = new FormData();
-                                oData.append("file", $("#id_file")[0].files[0]);
-                                oData.append("name", $("#id_file").val().replace(/^.+?\\([^\\]+?)(\.[^\.\\]*?)?$/gi,"$1"));
-                                oData.append("pid", pid);
-                                var oReq = new XMLHttpRequest();
-                                oReq.open( "POST", "upload" , true);
-                                oReq.onload = function() {
-                                      if (oReq.status == 200) {
-                                          alert("上传成功");
-                                     } else {
-                                          alert("失败");
-                                     }
-                                };
-                                oReq.send(oData);
-                                $(".ui-dialog").remove();
-                            },
-                            "取消": function () {
-                                $(".ui-dialog").remove();
-                            }
-                        }
-                    });
-                }
-            });
         });
     }
     {#  $("#search input").autocomplete({#}
@@ -205,6 +231,7 @@
     });
 
     function my_exit_() {
+        $("#uploadBox").html("");
         $(".ui-dialog").hide();
         return true;
     }

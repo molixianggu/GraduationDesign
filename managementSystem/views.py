@@ -1,12 +1,8 @@
-from django.shortcuts import render, render_to_response
+from django.shortcuts import render_to_response
 
-from django.template import loader, Context
+from django.template import Context
 
 from django.http import HttpResponse,HttpResponseRedirect
-
-from django.template import RequestContext      #验证
-
-import datetime
 
 from urllib.request import quote
 
@@ -14,7 +10,9 @@ import os
 
 from subprocess import call
 
-from time import strftime, time
+from time import strftime
+
+import time
 
 import json
 
@@ -105,16 +103,15 @@ def upload(request):
       return render_to_response('loadTemplate.html', {'FileForm': uf})
     else:
       uf = MyForm.importReport(request.POST, request.FILES)
-      pid = request.POST.get("pid", "")
-      equType = EquipmentType.objects.get(id=pid);
       if uf.is_valid():
-        Equipment.objects.create(  # 写入数据库
+        e  = Equipment.objects.create(  # 写入数据库
           EquipmentName=os.path.splitext(request.POST['name'])[0],
           file=uf.cleaned_data['file'],
           PeopleUpload=u,
-          uploadTime=int(time()),
-          Type=pid
+          uploadTime=int(time())
         )
+        call(['soffice', '--headless', '--convert-to', 'html', os.path.split(e.file.name)[1]],
+               cwd=os.path.join(os.getcwd(), 'managementSystem/static/data/Equipment/'))
         mylogs.objects.create(
           user_id=u.id,
           time=strftime('%Y-%m-%d %H:%M'),
@@ -122,11 +119,32 @@ def upload(request):
         )
         EquipmentLogs.objects.create(
               user = u,
-              equ = equType,
-              content = "上传了"
+              equ = EquipmentType.objects.all()[0],
+              content = '上传了[' + request.POST['name'] + ']'
         )
   return HttpResponse()
-
+def uploads(request):
+  if request.method != 'POST':
+    return HttpResponse()
+  b, u = managementSystem.function.verification_cookie(request)
+  if not b:
+    return HttpResponseRedirect('/')
+  if managementSystem.function.jurisdiction('addReport.html', u.levelName):
+    if request.POST.get("type", "") == "postForm":
+      uf = MyForm.importReport(request.POST, request.FILES)
+      if uf.is_valid():
+        experimental.objects.create(  # 写入数据库
+          experimentalName=os.path.splitext(request.POST['name'])[0],
+          file=uf.cleaned_data['file'],
+          PeopleUpload=u,
+          uploadTime=int(time()),
+        )
+        mylogs.objects.create(
+          user_id=u.id,
+          time=strftime('%Y-%m-%d %H:%M'),
+          content='上传了实验文件[' + request.POST['name'] + ']'
+        )
+  return HttpResponse()
 def uploadForm(request):
   if request.method != 'POST':
     return HttpResponse()
@@ -139,20 +157,23 @@ def uploadForm(request):
       uf = MyForm.UpLoadForm()
       return render_to_response('addEquipmentX.html', {'uploadForm': uf})
     elif request.POST.get("type", "") == "postForm":
-      equType = EquipmentType.objects.create(
-        templateName = request.POST.get("name"),
-        DirectParent = int(request.POST.get("id"))
-      )
-      mylogs.objects.create(
-        user_id=u.id,
-        time=strftime('%Y-%m-%d %H:%M'),
-        content='上传了设备文件[' + request.POST['name'] + ']'
-      )
-      EquipmentLogs.objects.create(
-        user = u,
-        equ = equType,
-        content = "添加了节点"
-      )
+      uf = MyForm.UpLoadForm(request.POST, request.FILES)
+      if uf.is_valid():
+        equType = EquipmentType.objects.create(
+          templateName = request.POST.get("name"),
+          DirectParent = int(request.POST.get("id")),
+          templatePositions = uf.cleaned_data['templatePositions']
+        )
+        mylogs.objects.create(
+          user_id=u.id,
+          time=strftime('%Y-%m-%d %H:%M'),
+          content='上传了设备文件[' + request.POST['name'] + ']'
+        )
+        EquipmentLogs.objects.create(
+          user = u,
+          equ = equType,
+          content = "添加了节点"
+        )
   return HttpResponse()
 
 
@@ -175,22 +196,18 @@ def addUser(request):
             ]
             }))
     elif request.POST.get('type', '') == 'sendForm':
-        rul = False
-        try:
-            Admin.objects.create(
-              userName=request.POST['userName'],
-              passWord=request.POST.get('passWord', ''),
-              nickName=request.POST.get('nickName', ''),
-              question=int(request.POST.get('selectVal', '0')),
-              answer=request.POST.get('answer', ''),
-              levelName=0,
-              checkAdmin=True,
-              loginIP='0.0.0.0',
-              loginTime = int(time())
-            )
-            rul = True
-        except BaseException:
-            pass
+        Admin.objects.create(
+          userName=request.POST['userName'],
+          passWord=request.POST.get('passWord', ''),
+          nickName=request.POST.get('nickName', ''),
+          question=int(request.POST.get('selectVal', '0')),
+          answer=request.POST.get('answer', ''),
+          levelName=0,
+          checkAdmin=True,
+          loginIP='0.0.0.0',
+          loginTime = int(time())
+        )
+        rul = True
         html = HttpResponse(json.dumps({
           'Success': rul,
           'errID':0,
@@ -252,8 +269,11 @@ def delReport(request):
   elif managementSystem.function.jurisdiction('delReport.html', u.levelName):
     def mydel(x):
       e = experimental.objects.get(id=int(x))
-      os.remove(e.file.name)
-      os.remove(e.file.name.replace('.xls', '.html'))
+      try:
+        os.remove(e.file.name)
+        os.remove(e.file.name.replace('.xls', '.html'))
+      except FileNotFoundError:
+        pass
       mylogs.objects.create(
         user_id=u.id,
         time=strftime('%Y-%m-%d %H:%M'),
@@ -327,8 +347,8 @@ def delEqu(request):
       )
       EquipmentLogs.objects.create(
         user = u,
-        equ = EquipmentType.objects.get(id=e.Type),
-        content = "删除了"
+        equ = EquipmentType.objects.all()[0],
+        content = "删除了[" + e.EquipmentName + "]"
       )
       e.delete()
     for _id in reqList.split(','):
@@ -371,7 +391,79 @@ def outEqu(request):
   }))
   return html
 
+def changeEqu(request):
+  if request.method != 'POST':
+    return HttpResponse()
+  b, u = managementSystem.function.verification_cookie(request)
+  Success, errID = False, 0
+  if not b:
+    return HttpResponseRedirect('/')
+  elif managementSystem.function.jurisdiction('EquipmentManage.html', u.levelName):
+    d = request.POST.get("id", "")
+    if request.POST.get("type", "") == 'del':
+      obj = EquipmentType.objects.get(id=d)
+      mylogs.objects.create(
+        user_id=u.id,
+        time=strftime('%Y-%m-%d %H:%M'),
+        content='删除了节点[' + obj.templateName + ']'
+      )
+      obj.delete()
+      Success = True
+    elif request.POST.get("type", "") == 'change':
+      obj = EquipmentType.objects.get(id=d)
+      obj.templateName = request.POST.get("text", "")
+      mylogs.objects.create(
+        user_id=u.id,
+        time=strftime('%Y-%m-%d %H:%M'),
+        content='修改了节点[' + obj.templateName + ']的名称'
+      )
+      obj.save()
+      Success = True
+  else:
+    errID = 303
+  html = HttpResponse(json.dumps({
+    'Success': Success,
+    'errID': errID,
+    'html': ""
+  }))
+  return html
 
+def changePower(request):
+  if request.method != 'POST':
+    return HttpResponse()
+  b, u = managementSystem.function.verification_cookie(request)
+  Success, errID = False, 0
+  if not b:
+    return HttpResponseRedirect('/')
+  elif managementSystem.function.jurisdiction('PowerDistribution.html', u.levelName):
+
+    if request.POST.get("type", "") == 'del':
+      d = request.POST.get("id", "")
+      Power.objects.get(id=d).delete()
+      Success = True
+    elif request.POST.get("type", "") == 'add':
+      uf = MyForm.importReport(request.POST, request.FILES)
+      if uf.is_valid():
+        Power.objects.create(  # 写入数据库
+          imgName=os.path.splitext(request.POST['name'])[0],
+          file=uf.cleaned_data['file'],
+          PeopleUpload=u,
+          uploadTime=int(time.time()),
+        )
+        mylogs.objects.create(
+          user_id=u.id,
+          time=strftime('%Y-%m-%d %H:%M'),
+          content='删除了变配文件[' + request.POST['name'] + ']'
+        )
+      Success = True
+  else:
+    errID = 303
+  html = HttpResponse(json.dumps({
+    'Success': Success,
+    'errID': errID,
+    'html': ""
+  }))
+  return html
 
 def getPage(request):
     if request.method != 'POST':
@@ -396,6 +488,7 @@ def preview(request):
   if not b:
     return HttpResponseRedirect('/')
   Success, errID = False, 0
+  exp = ""
   if managementSystem.function.jurisdiction('addReport.html', u.levelName):
     fileid = request.POST.get("id", "0")
     exp = experimentalType.objects.get(id=fileid)

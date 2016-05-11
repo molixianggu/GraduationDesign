@@ -86,13 +86,13 @@
                 <div class="template_pos"><img class="v" src="{{ img.myFileName }}"></div>
                 <div class="template_button" id="{{ img.id }}">
                     <span class="preview">预览</span>
+                    <span class="del"> | 删除</span>
                 </div>
             </li>
         {% endfor %}
     </ul>
     <div class="Vimg"></div>
     <div class="upWindow"></div>
-    <div id="addFile"><input type="button" value="添加文件"></div>
 </div>
 <div id="uploadBox"></div>
 <script>
@@ -116,53 +116,32 @@
             $(".v").draggable({disabled: false});
         });
     });
-    $("#addFile input").button();
-    $("#addFile").click(function (){
-        var self = this;
-        $.ajax({
-            cache: false,
-            type: "post",
-            url: "upload",
-            data: "type=getForm",
-            async: false,
-            error: function () {
-                alert('加载失败');
-            },
-            success: function (data) {
-                $(".upWindow").html(data);
-                $(".upWindow").dialog({
-                    resizable: false,
-                    title: "添加变配电文件",
-                    resizable: false,
-                    width: 350,
-                    modal : true,
-                    buttons: {
-                        "确定": function () {
-                            var oData = new FormData();
-                            oData.append("file", $("#id_file")[0].files[0]);
-                            oData.append("name", $("#id_file").val().replace(/^.+?\\([^\\]+?)(\.[^\.\\]*?)?$/gi,"$1"));
-                            oData.append("type", "add");
-                            var oReq = new XMLHttpRequest();
-                            oReq.open( "POST", "changePower" , true);
-                            oReq.onload = function() {
-                              if (oReq.status == 200) {
-                                  alert("成功");
-                                  getPage("PowerDistribution");
-                              }else{
-                                  alert("失败");
-                              }
-                            };
-                            oReq.send(oData);
-                             $(".upWindow").html("");
-                             $(".ui-dialog").remove();
-                        },
-                        "取消": function () {
-                             $(".upWindow").html("");
-                             $(".ui-dialog").remove();
+
+    $.map($(".del"), function(x){
+        $(x).click(function(){
+            $.ajax({
+                cache: false,
+                type: "post",
+                url: "changePower",
+                data: "type=del&id=" + $(this).parent().attr("id"),
+                async: false,
+                error: function () {
+                    alert('加载失败');
+                },
+                success: function (data) {
+                    var jsonObj = JSON.parse(data);
+                    if (jsonObj.Success) {
+                        alert("删除成功");
+                    } else {
+                        if (jsonObj.errID == 303) {
+                            alert("权限不足");
+                        } else {
+                            alert("失败");
                         }
                     }
-                });
-            }
+                }
+            });
+            getPage("PowerDel");
         });
     });
 
@@ -182,5 +161,6 @@
         $(".Vimg").remove();
         return true;
     }
-    _my_loadOver("PowerDistribution");
+    _my_loadOver("PowerDel");
 </script>
+

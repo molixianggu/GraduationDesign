@@ -68,7 +68,7 @@ def getDict(pageName):
       }
     elif pageName == 'addEquipment.html':
       d = {
-        'templateList': EquipmentType.objects.all()
+        'templateList': Equipment.objects.all()
       }
     elif pageName == 'findEquipment.html':
       d = {
@@ -86,7 +86,7 @@ def getDict(pageName):
           'inf': {
             'templateName': x.templateName,
             'category': x.category,
-            'templatePositions': x.templatePositions.name,
+            'templatePositions': x.templatePositions.name[43:],
             'indexKey': x.indexKey
           }
         } for x in EquipmentType.objects.all()
@@ -102,6 +102,11 @@ def getDict(pageName):
     elif pageName == 'EquipmentLogs.html':
       d = {
         'logsList':EquipmentLogs.objects.all()
+      }
+    elif pageName[:5] == 'Power':
+      # pd = Power.objects.all()
+      d = {#{x:(x=='file' and pd[x].name[17:]or pd[x]) for x in pd}
+        'imgList':Power.objects.all()
       }
     elif pageName == 'a.html':
       d = {
@@ -147,6 +152,12 @@ def getDict(pageName):
 4. 修改了设备类型数据库的表示方式, 并添加了默认值
 5. 实现增加子项功能
 
+1.0.0版本 更新 : #2016年5月11日23:23:46
+1. 修复若干漏洞
+2. 完成变配电所和设备类型的增删改操作
+3. 设备类型修改回可以添加文件
+4. 将原有变配电所功能分开到独立的页面
+
 '''
       }
     return d
@@ -170,6 +181,8 @@ def jurisdiction(pageName, lv):     #修改权限
     'editEquipment.html': 4,
     'EquipmentLogs.html':4,
     'PowerDistribution.html':4,
+    'PowerDel.html':3,
+    'PowerFind.html': 3,
     'a.html':4,         #查看更新日志
   }
   return d.get(pageName, 10) <= lv

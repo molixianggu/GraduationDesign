@@ -56,7 +56,11 @@ class UpLoadForm(forms.Form):
         max_length=32,
         label = '父节点',
     )
-    category = forms.CharField(
-        max_length=32,
-        label = '名称',
+    templatePositions = forms.FileField(
+        label=''
     )
+    templateName = forms.CharField(
+        max_length=32,
+        label='名称'
+    )
+

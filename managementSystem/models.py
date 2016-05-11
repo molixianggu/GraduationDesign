@@ -4,6 +4,8 @@ from django.contrib import admin
 
 import django.utils.timezone as timezone
 
+import time
+
 class Admin(models.Model):
     userName = models.CharField(max_length = 30)    #用户名
     passWord = models.CharField(max_length = 32)    #密码
@@ -116,6 +118,19 @@ class Equipment(models.Model):
   def __str__(self):
     return self.EquipmentName
 
+class Power(models.Model):
+  imgName = models.CharField(max_length=200)
+  file = models.FileField(upload_to='./managementSystem/static/data\Power')
+  PeopleUpload = models.ForeignKey(Admin, related_name='Powers')
+  uploadTime = models.IntegerField(null=True, default=0)
+  Type = models.IntegerField(null=True, default=0)
+
+  def __getattr__(self, item):
+    if item == 'myFileName':
+      return self.file.name[17:]
+    # elif item == 'myUpTime':
+    #   return time.strftime('%Y-%m-%d %H:%M:%S', time.gmtime(self.uploadTime))
+
 # devicetyperuler = blob
 #    dataindex = models.CharField(max_length = 1024, null = True)
 #    dataenabled = models.IntegerField(null = True)
@@ -132,3 +147,4 @@ admin.site.register(experimental)
 admin.site.register(Equipment)
 admin.site.register(EquipmentType)
 admin.site.register(EquipmentLogs)
+admin.site.register(Power)

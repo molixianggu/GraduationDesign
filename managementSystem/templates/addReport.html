@@ -148,21 +148,22 @@
                         modal : true,
                         buttons: {
                             "确定": function () {
-                                alert($("#load_form").serialize());
-                                {#                                    $.ajax({#}
-                                {#                                        cache: false,#}
-                                {#                                        type: "POST",#}
-                                {#                                        url: "upload",#}
-                                {#                                        data: $("#load-form").serialize() + "type=postForm",#}
-                                {#                                        async: false,#}
-                                {#                                        error: function (request) {#}
-                                {#                                            alert('加载失败');#}
-                                {#                                        },#}
-                                {#                                        success: function (data) {#}
-                                {#                                            alert("成功");#}
-                                {#                                        }#}
-                                {#                                    });#}
-                                {#                                  $("#uploadBox").dialog("close");#}
+                                var oData = new FormData();
+                                oData.append("file", $("#id_file")[0].files[0]);
+                                oData.append("name", $("#id_file").val().replace(/^.+?\\([^\\]+?)(\.[^\.\\]*?)?$/gi,"$1"));
+                                oData.append("type", "postForm");
+                                var oReq = new XMLHttpRequest();
+                                oReq.open( "POST", "uploads" , true);
+                                oReq.onload = function() {
+                                      if (oReq.status == 200) {
+                                          alert("上传成功");
+                                          $("#uploadBox").dialog("close");
+                                          getPage("addReport");
+                                     } else {
+                                          alert("失败");
+                                     }
+                                };
+                                oReq.send(oData);
                             },
                             "取消": function () {
                                 $("#uploadBox").dialog("close");

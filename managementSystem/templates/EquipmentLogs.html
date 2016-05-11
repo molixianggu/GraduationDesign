@@ -84,8 +84,8 @@
                 <div class="log-name">{{ forloop.counter }} {{ log.user.nickName }}</div>
                 <div class="log-content">
                     在<span class="_time">{{ log.time|date:"Y-m-d l  H:i:s" }}</span>
-                    <span class="log-con-event">{{ log.content }}</span>了
-                    <span class="log-con-event">[{{ log.equ.templateName }}]</span>
+                    <span class="log-con-event">{{ log.content }}</span>
+{#                    <span class="log-con-event">[{{ log.equ.templateName }}]</span>#}
                     <span class="log-con-d">({{ log.time|timesince }})</span>
                 </div>
                 <div class="log_id">{{ log.id }}</div>

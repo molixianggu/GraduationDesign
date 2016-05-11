@@ -13935,14 +13935,16 @@ $.widget( "ui.tabs", {
 			panel.attr( "aria-busy", "true" );
 
 			this.xhr
-				.success(function( response ) {
-					// support: jQuery <1.8
-					// http://bugs.jquery.com/ticket/11778
-					setTimeout(function() {
-						panel.html( response );
-						that._trigger( "load", event, eventData );
-					}, 1 );
-				})
+				.success({
+          data: function (response) {
+            // support: jQuery <1.8
+            // http://bugs.jquery.com/ticket/11778
+            setTimeout(function () {
+              panel.html(response);
+              that._trigger("load", event, eventData);
+            }, 1);
+          }
+        })
 				.complete(function( jqXHR, status ) {
 					// support: jQuery <1.8
 					// http://bugs.jquery.com/ticket/11778
@@ -14019,11 +14021,13 @@ if ( $.uiBackCompat !== false ) {
 					return;
 				}
 
-				ui.jqXHR.success(function() {
-					if ( that.options.cache ) {
-						$.data( ui.tab[ 0 ], "cache.tabs", true );
-					}
-				});
+				ui.jqXHR.success({
+          data: function () {
+            if (that.options.cache) {
+              $.data(ui.tab[0], "cache.tabs", true);
+            }
+          }
+        });
 			}});
 		},
 

@@ -30,8 +30,13 @@ urlpatterns = [
     url(r'delReport', delReport, name='delReport'),
     url(r'outputReport', outputReport, name='outputReport'),
     url(r'upload$', upload, name='upload'),
+    url(r'uploads$', uploads, name='uploads'),
     url(r'uploadForm', uploadForm, name='uploadForm'),
     url(r'delEqu', delEqu, name='delEqu'),
     url(r'outEqu', outEqu, name='outEqu'),
+
+    url(r'changeEqu', changeEqu, name= 'changeEqu'),
+    url(r'changePower', changePower, name='changePower')
+
     # url(r'myTest', myTest)
 ]

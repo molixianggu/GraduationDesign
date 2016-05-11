@@ -8,6 +8,7 @@
         display: none;
         list-style-type: square;
         -moz-user-select:-moz-none;
+        background-color: #e0e0e0;
     }
 
     #main .name {
@@ -31,6 +32,10 @@
         float: right;
         width: 40px;
     }
+    #main .pid{
+        display: none;
+    }
+
 
     #main .EquiType_but {
         float: right;
@@ -41,6 +46,9 @@
     #main .EquiType_but span{
         cursor: pointer;
     }
+    #main .sid{
+        display: none;
+    }
 </style>
 </head>
 <body>
@@ -50,7 +58,7 @@
 </div>
 <div id="main">
     <ul id="root">
-        <li id="item_-1" value="0" onselectstart="return false;">
+        <li id="item_-1" value="1" onselectstart="return false;">
             <div class="name">所有设备</div>
             <div class="EquiType_but">
                 <span class="add">增加子项</span>
@@ -65,22 +73,36 @@
     function new_li(item) {
         return '<li id="item_' + item.id + '" value="1" onselectstart="return false;">' +
                 '<div class="name">' + item.inf.templateName + '</div>' +
-                '<div class="category">[' + item.inf.category + ']</div>' +
+                '<div class="category">[' + item.inf.templatePositions + ']</div>' +
+                '<div class="pid">' + item.pid + '</div>' +
+                '<div class="sid">' + item.id + '</div>' +
                 '<div class="EquiType_but">' +
                 '<span class="add">增加子项</span> | ' +
                 '<span class="change">修改</span> | ' +
                 '<span class="del">删除</span>' +
                 '</div>' +
-                '<div class="numberBox"><input type="number" value=' + item.id + '></div>' +
+                '<div class="numberBox"><input type="number" value="0"></div>' +
                 '</li>';
     }
+    function add1(sub){
+        var pid = parseInt(sub.find(".pid").text());
+        if (pid != -1){
+            var par = $("#item_" + pid);
+            var b = par.find(".numberBox input");
+            b.val(parseInt(b.val()) + 1);
+            add1(par);
+        }
+    }
+
     function Child_s(parent, parentId, d) {
-        parent.append('<ul class="u_' + d.toString() + '"></ul>');
         for (var i = 0; i < items.length; i++) {
             var item = items[i];
-            if (item.pid == parentId && item.id != parentId) {
-                sub = parent.find(".u_" + d.toString());
+            if (item.pid == parentId && item.id != parentId){
+                parent.append('<ul class="u_' + item.id + '"></ul>');
+                var sub = parent.find(".u_" + item.id);
+                $("#item_" + item.pid).css("background-color", "#fff");
                 sub.append(new_li(item));
+                add1($("#item_" + item.id));
                 Child_s(sub, item.id, d + 1);
             }
         }
@@ -89,12 +111,17 @@
 
     $.map($("#main li"), function (x) {
         $(x).click(function () {
-            if ($(this).attr("value") == "0") {
-                $(this).next().find("li").show("slow");
-                $(this).attr("value", "1");
-            } else {
-                $(this).next().find("li").hide("slow");
+            if ($(this).attr("value") == "1") {
+                $.map($(this).nextAll("ul").children("li"),function(x){
+                    $(x) .show("slow");
+                    $(x).attr("value", "1");
+                });
                 $(this).attr("value", "0");
+            } else {
+                $.map($(this).nextAll("ul").find("li"),function(x){
+                    $(x).hide("slow");
+                });
+                $(this).attr("value", "1");
             }
         });
     });
@@ -104,6 +131,66 @@
             return false;
         });
     });
+    $.map($(".change"), function (x) {
+        $(x).click(function () {
+            var name = prompt("节点名", "修改名称");
+            if (name == '' || name == undefined){
+                return false;
+            }
+            $.ajax({
+                cache: false,
+                type: "post",
+                url: "changeEqu",
+                data: "type=change&" + "text=" + name + "&id=" + $(this).parent().siblings(".sid").text(),
+                async: false,
+                error: function () {
+                    alert('加载失败');
+                },
+                success: function (data) {
+                    var jsonObj = JSON.parse(data);
+                    if (jsonObj.Success) {
+                        alert("修改成功");
+                    } else {
+                        if (jsonObj.errID == 303) {
+                            alert("权限不足");
+                        } else {
+                            alert("失败");
+                        }
+                    }
+                }
+            });
+            return false;
+        });
+    });
+
+    $.map($(".del"), function (x) {
+        $(x).click(function () {
+            $.ajax({
+                cache: false,
+                type: "post",
+                url: "changeEqu",
+                data: "type=del&id=" + $(this).parent().siblings(".sid").text(),
+                async: false,
+                error: function () {
+                    alert('加载失败');
+                },
+                success: function (data) {
+                    var jsonObj = JSON.parse(data);
+                    if (jsonObj.Success) {
+                        alert("删除成功");
+                    } else {
+                        if (jsonObj.errID == 303) {
+                            alert("权限不足");
+                        } else {
+                            alert("失败");
+                        }
+                    }
+                }
+            });
+            getPage("EquipmentManage");
+        });
+    });
+
     $.map($(".add"), function (x) {
         $(x).click(function () {
             var self = this;
@@ -113,7 +200,7 @@
                 url: "uploadForm",
                 data: "type=getForm",
                 async: false,
-                error: function (request) {
+                error: function () {
                     alert('加载失败');
                 },
                 success: function (data) {
@@ -129,35 +216,42 @@
                         modal : true,
                         buttons: {
                             "确定": function () {
-                                    var d = "type=postForm&id=" + id + "&name=" + $("#id_category").val();
-                                    $.ajax({
-                                        cache: false,
-                                        type: "POST",
-                                        url: "uploadForm",
-                                        data: d,
-                                        async: false,
-                                        error: function (request) {
-                                            alert('加载失败');
-                                        },
-                                        success: function (data) {
-                                            alert("添加成功");
-                                        }
-                                    });
-                                 $(".upWindow").dialog("close");
+                                    var oData = new FormData();
+                                    oData.append("templatePositions", $("#id_templatePositions")[0].files[0]);
+                                    oData.append("name", $("#id_templatePositions").val().replace(/^.+?\\([^\\]+?)(\.[^\.\\]*?)?$/gi,"$1"));
+                                    oData.append("type", "postForm");
+                                    oData.append("id", id);
+                                    oData.append("templateName", $("#id_templateName").val());
+                                    oData.append("DirectParent", id);
+                                    var oReq = new XMLHttpRequest();
+                                    oReq.open( "POST", "uploadForm" , true);
+                                    oReq.onload = function() {
+                                      if (oReq.status == 200) {
+                                          alert("成功");
+                                          getPage("EquipmentManage");
+                                      }else{
+                                          alert("失败");
+                                      }
+                                    };
+                                    oReq.send(oData);
+                                 $(".upWindow").html("");
+                                 $(".ui-dialog").remove();
                                  getPage("EquipmentManage");
                             },
                             "取消": function () {
-                                $(".upWindow").dialog("close");
+                                 $(".upWindow").html("");
+                                 $(".ui-dialog").remove();
                             }
                         }
                     });
                 }
             });
-            return false;
+            getPage("EquipmentManage");
         });
     });
     function my_exit_() {
         $(".upWindow").html("");
+        $(".ui-dialog").remove();
         return true;
     }
     _my_loadOver("EquipmentManage");
