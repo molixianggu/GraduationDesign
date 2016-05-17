@@ -6,7 +6,7 @@
     #search {
         height: 30px;
         padding: 10px;
-        margin-left: 20%;
+        margin-left: 6%;
     }
 
     #search input {
@@ -64,10 +64,11 @@
 </div>
 <div id="main">
     <div id="search">
-        快速搜索：
-        <input value=""> 按时间检索
-        <input id="startDate" value="开始时间"> 至
-        <input id="endDate" value="结束时间">
+        <label>快速搜索：<input value=""></label>
+        <label>检索数据: <input value=""></label>
+        <label>按时间检索: <input id="startDate" value="开始时间"> 至
+        <input id="endDate" value="结束时间"></label>
+
     </div>
     <ul>
         {% for template in templateList %}

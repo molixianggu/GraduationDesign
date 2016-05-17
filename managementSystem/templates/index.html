@@ -46,10 +46,77 @@
                         <li id="bule-theme">蓝白</li>
                     </ul>
                 </li>
-                <li>修改信息</li>
-                <li>管理密码</li>
+                <li id="changeName">修改昵称</li>
+                <li id="changePassWord">管理密码</li>
+                  <script>
+                      $("#changeName").click(function(){
+                          var sName = prompt("请输入要修改的昵称");
+                          if (sName == ""){
+                              return ;
+                          }
+                          $.ajax({
+                            cache: false,
+                            type: "post",
+                            url: "changeInfo",
+                            data: "type=1&name=" + sName,
+                            async: false,
+                            error: function (request) {
+                                alert('加载失败');
+                            },
+                            success: function (data) {
+                                alert("修改成功");
+                            }
+                        });
+                      });
+                      $("#changePassWord").click(function(){
+                          $("#messBox").html('<label><input type="radio" name="a" value="1">修改用户名称</label>'+
+                          '<label><input type="radio" name="a" value="2">修改登录密码</label>').dialog({
+                            title: "修改",
+                            resizable: false,
+                            modal : true,
+                            width: 150,
+                            height: 200,
+                            buttons: {
+                                "修改": function(){
+                                    var i = $("#messBox input:checked").val();
+                                    if (i == "1"){
+                                        var mName = prompt("请输入要修改的昵称");
+                                        if (mName == ""){
+                                            return ;
+                                        }
+                                    }else if (i == "2"){
+                                        var mName = prompt("请输入修改后的密码");
+                                        if (mName == ""){
+                                            return ;
+                                        }
+                                        var mName2 = prompt("请再次输入修改后的密码");
+                                        if (mName != mName2){
+                                            alert("两次密码不一致");
+                                            return ;
+                                        }
+                                    }else if(i == undefined){
+                                        return ;
+                                    }
+                                    $.ajax({
+                                        cache: false,
+                                        type: "post",
+                                        url: "changeInfo",
+                                        data: "val=" + mName + "&type=" + i,
+                                        async: false,
+                                        error: function (request) {
+                                            alert('加载失败');
+                                        },
+                                        success: function (data) {
+                                            alert("修改成功");
+                                        }
+                                    });
+                                }
+                            }
+                        });
+                      });
+                  </script>
                 <hr align="center" width="80%" />
-                <li id="close">注销</li>
+                  <li id="close">注销</li>
               </ul>
             </div>
           </div>

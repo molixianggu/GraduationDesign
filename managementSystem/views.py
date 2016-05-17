@@ -56,7 +56,7 @@ def index(request):
               time=strftime('%Y-%m-%d %H:%M'),
                 content = '登录成功'
             )
-            u.loginTime = int(time())
+            u.loginTime = int(time.time())
             u.loginIP = request.META['REMOTE_ADDR']
             u.save()
         return html
@@ -79,7 +79,7 @@ def Console(request):
             experimentalName=fileName,
             file=uf.cleaned_data['file'],
             PeopleUpload=u,
-            uploadTime=int(time())
+            uploadTime=int(time.time())
           )
           call(['soffice', '--headless', '--convert-to', 'html', os.path.split(e.file.name)[1]],
                cwd=os.path.join(os.getcwd(), 'managementSystem/static/data/experimental/'))
@@ -108,7 +108,7 @@ def upload(request):
           EquipmentName=os.path.splitext(request.POST['name'])[0],
           file=uf.cleaned_data['file'],
           PeopleUpload=u,
-          uploadTime=int(time())
+          uploadTime=int(time.time())
         )
         call(['soffice', '--headless', '--convert-to', 'html', os.path.split(e.file.name)[1]],
                cwd=os.path.join(os.getcwd(), 'managementSystem/static/data/Equipment/'))
@@ -137,7 +137,7 @@ def uploads(request):
           experimentalName=os.path.splitext(request.POST['name'])[0],
           file=uf.cleaned_data['file'],
           PeopleUpload=u,
-          uploadTime=int(time()),
+          uploadTime=int(time.time()),
         )
         mylogs.objects.create(
           user_id=u.id,
@@ -205,7 +205,7 @@ def addUser(request):
           levelName=0,
           checkAdmin=True,
           loginIP='0.0.0.0',
-          loginTime = int(time())
+          loginTime = int(time.time())
         )
         rul = True
         html = HttpResponse(json.dumps({
@@ -219,7 +219,7 @@ def addUser(request):
               time=strftime('%Y-%m-%d %H:%M'),
               content = '添加用户[' + request.POST['nickName'] + ']'
             )
-            u.loginTime = int(time())
+            u.loginTime = int(time.time())
             u.loginIP = request.META['REMOTE_ADDR']
             u.save()
         return html
@@ -241,7 +241,7 @@ def delUser(request):
         time=strftime('%Y-%m-%d %H:%M'),
         content='删除用户[' + userName + ']'
       )
-      u.loginTime = int(time())
+      u.loginTime = int(time.time())
       u.loginIP = request.META['REMOTE_ADDR']
       u.save()
       Success = True
@@ -254,6 +254,37 @@ def delUser(request):
       'html': ''
     }))
     return html
+#修改用户信息
+def changeInfo(request):
+  if request.method != 'POST':
+    return HttpResponse()
+  b, u = managementSystem.function.verification_cookie(request)
+  if not b:
+    return HttpResponseRedirect('/')
+  t = request.POST.get("type", "")
+  c = ""
+  if t == "0":
+    sName = request.POST.get("name", "")
+    u.nickName = sName
+    u.save()
+    c = '修改了自己的昵称'
+  elif t == "1":
+    mName = request.POST.get("val", "")
+    u.userName = mName
+    u.save()
+    c = "修改了登录名"
+  elif t == "2":
+    mName = request.POST.get("val", "")
+    u.passWord = mName
+    u.save()
+    c = "修改了密码"
+  mylogs.objects.create(
+    user_id=u.id,
+    time=strftime('%Y-%m-%d %H:%M'),
+    content=c
+  )
+  return HttpResponse()
+
 
 #删除实验
 def delReport(request):

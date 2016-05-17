@@ -36,7 +36,8 @@ urlpatterns = [
     url(r'outEqu', outEqu, name='outEqu'),
 
     url(r'changeEqu', changeEqu, name= 'changeEqu'),
-    url(r'changePower', changePower, name='changePower')
+    url(r'changePower', changePower, name='changePower'),
 
+    url(r'^changeInfo$', changeInfo, name='changeInfo'),
     # url(r'myTest', myTest)
 ]

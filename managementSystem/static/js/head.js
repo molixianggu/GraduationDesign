@@ -48,9 +48,15 @@ $(function(){
   $("#pass-Lock").on('keypress',function(event){
     if(event.keyCode == "13") {
       $("#pass-Lock").slideToggle("slow");
-      $("#pass-Lock input").val("");
-      $("#bg-imgs").fadeOut(1000);
-      $.cookie("lock", 0);
+
+      if ($.cookie("pw") == $("#pass-Lock input").val()){
+        $("#pass-Lock input").val("");
+        $("#bg-imgs").fadeOut(1000);
+        $.cookie("lock", 0);
+      }else{
+        alert("密码错啦");
+      }
+
     }
   });
   $("#bg-imgs").bind("contextmenu", function (e) {
@@ -63,6 +69,7 @@ $(function(){
       $.cookie("nickName", "");
       $.cookie("levelName", "");
       $.cookie("key", "");
+      $.cookie("lock", "");
       window.location.href = "/";
     }
   });
@@ -75,6 +82,15 @@ $(function(){
        }
   });
   $("#Lock").click(function(){
+    var pw = $.cookie("pw");
+    if (pw == undefined){
+      pw = prompt("请设置锁屏密码");
+      if (pw != ""){
+        $.cookie("pw", pw);
+        $.cookie("lock", 1);
+        $("#bg-imgs").fadeIn(1000);
+      }
+    }
     $.cookie("lock", 1);
     $("#bg-imgs").fadeIn(1000);
   });
