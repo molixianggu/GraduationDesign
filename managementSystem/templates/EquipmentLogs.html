@@ -76,7 +76,12 @@
     <span class="ref">刷新</span>
 </div>
 <div id="main">
-    <div id="headBox"><div id="tit">[<span>三相少油断路器试验报告</span>]历史记录</div> <span id="rul">&lt;&lt;返回</span></div>
+    <div id="headBox"><div id="tit">[<span>所有文件</span>]历史记录</div> <span id="rul">&lt;&lt;返回</span></div>
+    <script>
+        $("#rul").click(function(){
+            getPage("findEquipment");
+        });
+    </script>
     <ul>
         {% for log in logsList %}
             <li class="log-class">

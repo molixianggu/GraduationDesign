@@ -64,8 +64,11 @@
     }
     #addFile {
         float: right;
-        margin: 0px 38px;
+        margin: 0 38px;
         height: 20px;
+    }
+    #load_form #x{
+        margin: 7px 7px 7px 30px;
     }
 </style>
 <div id="body_head">
@@ -123,13 +126,14 @@
             cache: false,
             type: "post",
             url: "upload",
-            data: "type=getForm",
+            data: "type=getForm&f=pp",
             async: false,
             error: function () {
                 alert('加载失败');
             },
             success: function (data) {
                 $(".upWindow").html(data);
+                $("#load_form").append('<label>关键字<input id="x" max_len="18"></label>');
                 $(".upWindow").dialog({
                     resizable: false,
                     title: "添加变配电文件",

@@ -86,7 +86,7 @@ def Console(request):
           mylogs.objects.create(
             user_id=u.id,
             time=strftime('%Y-%m-%d %H:%M'),
-            content='上传了实验[' + request.POST['name'] + ']'
+            content='上传了试验[' + request.POST['name'] + ']'
           )
       return HttpResponse()
 
@@ -142,7 +142,7 @@ def uploads(request):
         mylogs.objects.create(
           user_id=u.id,
           time=strftime('%Y-%m-%d %H:%M'),
-          content='上传了实验文件[' + request.POST['name'] + ']'
+          content='上传了试验文件[' + request.POST['name'] + ']'
         )
   return HttpResponse()
 def uploadForm(request):
@@ -286,7 +286,7 @@ def changeInfo(request):
   return HttpResponse()
 
 
-#删除实验
+#删除试验
 def delReport(request):
   if request.method != 'POST':
     return HttpResponse()
@@ -308,7 +308,7 @@ def delReport(request):
       mylogs.objects.create(
         user_id=u.id,
         time=strftime('%Y-%m-%d %H:%M'),
-        content='删除实验[' + e.experimentalName + ']'
+        content='删除试验[' + e.experimentalName + ']'
       )
       e.delete()
 
@@ -325,7 +325,7 @@ def delReport(request):
   }))
   return html
 
-#导出实验
+#导出试验
 def outputReport(request):
   if request.method != 'POST':
     return HttpResponse()
@@ -341,7 +341,7 @@ def outputReport(request):
     mylogs.objects.create(
       user_id=u.id,
       time=strftime('%Y-%m-%d %H:%M'),
-      content='导出实验包'
+      content='导出试验包'
     )
     Success = True
   else:
@@ -520,7 +520,7 @@ def preview(request):
     return HttpResponseRedirect('/')
   Success, errID = False, 0
   exp = ""
-  if managementSystem.function.jurisdiction('addReport.html', u.levelName):
+  if managementSystem.function.jurisdiction('PowerDistribution.html', u.levelName):
     fileid = request.POST.get("id", "0")
     exp = experimentalType.objects.get(id=fileid)
     Success = True
@@ -572,5 +572,3 @@ def changeJuris(request):
     'html': ''
   }))
   return html
-# def myTest(request):
-#   return HttpResponse('<h2>收到了你的' + request.method + '消息:</h2>' + ', '.join([str(x) for x in request.GET.items()]))

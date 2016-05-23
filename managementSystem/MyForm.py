@@ -51,6 +51,13 @@ class importReport(forms.Form):
   file = forms.FileField()
 
 
+class powerFileReport(forms.Form):
+    file = forms.FileField()
+    key = forms.CharField(
+        max_length=18,
+        label = '关键字',
+    )
+
 class UpLoadForm(forms.Form):
     DirectParent = forms.CharField(
         max_length=32,
