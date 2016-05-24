@@ -57,7 +57,7 @@
     }
 </style>
 <div id="body_head">
-    <span class="title">设备检索</span>
+    <span class="title">变配电所检索</span>
     <span class="ref">刷新</span>
 </div>
 <div id="main">
@@ -69,7 +69,7 @@
     </div>
     <ul>
         {% for img in imgList %}
-            <li class="template">
+            <li class="template" data-key="{{ img.key }}">
                 <div class="template_name">{{ img.imgName }}</div>
                 <div class="template_category"></div>
                 <div class="template_key">{{ img.uploadTime }}</div>
@@ -81,6 +81,7 @@
         {% endfor %}
     </ul>
 </div>
+<div class="Vimg"></div>
 <script>
     var DownloadPath = "";
     var template = $(".template");
@@ -89,8 +90,27 @@
         my_list.push($(template[i]).find(".template_name").text());
 
         $(template[i]).find(".template_key").text(getLocalTime($(template[i]).find(".template_key").text()));
-        //点击事件
     }
+    $.map($(".preview"), function(x){
+        $(x).click(function(){
+            $(".Vimg").html($(this).parent().prev().html());
+            $(".Vimg").dialog({
+                title: "预览",
+                resizable: false,
+                modal : true,
+                width: 920,
+                height: 500,
+            });
+            $(document).ready(function() {
+                $(".v").bind("mousewheel", function() {
+                    zoomImg(this);
+                    return false;
+                });
+            });
+
+            $(".v").draggable({disabled: false});
+        });
+    });
     function searchTxt(a) {
         var v = $("#search input").val();
         var arr = v.split(" ");
@@ -98,8 +118,9 @@
         for (var i = 0; i < template.length; i++) {
             var name = $(template[i]).find(".template_name").text();
             var cate = $(template[i]).find(".template_category").text();
+            var key = $(template[i]).attr("data-key");
             for (var j = 0; j < arr.length; j++) {
-                if ((name + cate).indexOf(arr[j]) == -1) {
+                if ((name + cate + key).indexOf(arr[j]) == -1) {
                     $(template[i]).hide();
                     break;
                 } else {
@@ -110,7 +131,22 @@
             }
         }
     }
-
+    function zoomImg(o) {
+        var zoom = parseInt(o.style.zoom, 10) || 100;
+        zoom += event.wheelDelta / 10; //可适合修改
+        if (zoom > 28)
+            o.style.zoom = zoom + '%';
+    }
+    $(".v").mousedown(function(){
+        $(this).css("cursor","move");
+    });
+    $(".v").mouseup(function(){
+        $(this).css("cursor","default");
+    });
+    function my_exit_() {
+        $(".Vimg").remove();
+        return true;
+    }
     $("#search input").on("input propertychange", function () {
         searchTxt(true);
     });
@@ -131,7 +167,7 @@
          （因为月份中已经包含“月”字，所以这里省略） */
         dateFormat: "yy/MM/dd",
         onSelect: function (d) {
-            $.map($(".template_category span"), function (x, i, d) {
+            $.map($(".template_key"), function (x, i, d) {
                 var d = d.split("/");
                 var b = $("#endDate").val();
                 if (b != "结束时间") {
@@ -139,13 +175,12 @@
                 } else {
                     return;
                 }
-
                 var m = $(x).text().split(" ")[0].split("/");
                 if (new Date(d[0], d[1], d[2]).getTime() < new Date(m[0], m[1], m[2]).getTime() &&
                         new Date(m[0], m[1], m[2]).getTime() < new Date(b[0], b[1], b[2]).getTime()) {
-                    $(x).parent().parent().show();
+                    $(x).parent().show();
                 } else {
-                    $(x).parent().parent().hide();
+                    $(x).parent().hide();
                 }
             }, d);
             searchTxt(false);
@@ -167,7 +202,7 @@
          （因为月份中已经包含“月”字，所以这里省略） */
         dateFormat: "yy/MM/dd",
         onSelect: function (d) {
-            $.map($(".template_category span"), function (x, i, d) {
+            $.map($(".template_key"), function (x, i, d) {
                 var d = d.split("/");
                 var b = $("#startDate").val();
                 if (b != "开始时间") {
@@ -179,9 +214,9 @@
                 var m = $(x).text().split(" ")[0].split("/");
                 if (new Date(d[0], d[1], d[2]).getTime() > new Date(m[0], m[1], m[2]).getTime() &&
                         new Date(m[0], m[1], m[2]).getTime() > new Date(b[0], b[1], b[2]).getTime()) {
-                    $(x).parent().parent().show();
+                    $(x).parent().show();
                 } else {
-                    $(x).parent().parent().hide();
+                    $(x).parent().hide();
                 }
             }, d);
             searchTxt(false);

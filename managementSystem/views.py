@@ -480,6 +480,7 @@ def changePower(request):
           file=uf.cleaned_data['file'],
           PeopleUpload=u,
           uploadTime=int(time.time()),
+          key = request.POST.get("key", ""),
         )
         mylogs.objects.create(
           user_id=u.id,

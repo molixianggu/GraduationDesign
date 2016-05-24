@@ -2,7 +2,13 @@
 from managementSystem.models import *
 
 import hashlib                                  #md5 验证
-
+ph = None
+try:
+  from psutil import virtual_memory
+except ImportError:
+  pass
+else:
+  ph = virtual_memory()
 import json
 
 import os
@@ -28,8 +34,16 @@ def verification_cookie(request):
 def getDict(pageName):
     d = {}
     if pageName == 'home.html':
+        if not (ph is None):
+            n = ph.used
+            f = ph.total
+        else:
+            n = 0
+            f = 4174954496
         d = {
-            'logs':mylogs.objects.all().order_by('-time')[:8]
+            'logs':mylogs.objects.all().order_by('-time')[:8],
+            'n':n,
+            'f':f,
         }
     elif pageName == 'userManagement.html':
         d = {
@@ -170,6 +184,12 @@ def getDict(pageName):
 1. 修正试验错别字, 数据库中数据没有修改
 2. 新增 试验对比 模块界面, 功能暂未实现
 3. 添加变配电文件添加关键字
+
+1.0.6版本 更新 : #2016年5月24日23:25:00
+1. 调整登录界面框的颜色, 文字更清晰
+2. 完成变配电所添加关键字和检索功能
+3. 设备类型管理添加预览功能
+4. 修复变配电所时间检索功能
 '''
       }
     return d

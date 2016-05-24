@@ -6,13 +6,12 @@ body{
   height: 240px;
   margin-top: 18%;
   margin-left: 60%;
-  border: outset;
-  border-color: #eeeeee;
+  border: outset #eeeeee;
   background-color: #000000;
-  filter:alpha(opacity=50);
-  -moz-opacity:0.5;
-  -khtml-opacity: 0.5;
-  opacity: 0.5;
+  filter:alpha(opacity=80);
+  -moz-opacity:0.8;
+  -khtml-opacity: 0.8;
+  opacity: 0.8;
 }
 #window span{
   font-weight: bold;
@@ -31,11 +30,6 @@ body{
   color: #ffffff;
 }
 #input_win input:hover{
-  filter:alpha(opacity=50);
-  -moz-opacity:0.5;
-  -khtml-opacity: 0.5;
-  opacity: 0.5;
-  background-color: #aaaaaa;
   border:2px solid #66ffcc;
 }
 .inputBox div{

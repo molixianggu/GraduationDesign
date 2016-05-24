@@ -124,6 +124,7 @@ class Power(models.Model):
   PeopleUpload = models.ForeignKey(Admin, related_name='Powers')
   uploadTime = models.IntegerField(null=True, default=0)
   Type = models.IntegerField(null=True, default=0)
+  key = models.CharField(max_length=200, null=True, default="")
 
   def __getattr__(self, item):
     if item == 'myFileName':

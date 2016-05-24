@@ -72,7 +72,7 @@
     }
 </style>
 <div id="body_head">
-    <span class="title">变配电所检索</span>
+    <span class="title">新增变配电所</span>
     <span class="ref">刷新</span>
 </div>
 <div id="main">
@@ -146,6 +146,7 @@
                             oData.append("file", $("#id_file")[0].files[0]);
                             oData.append("name", $("#id_file").val().replace(/^.+?\\([^\\]+?)(\.[^\.\\]*?)?$/gi,"$1"));
                             oData.append("type", "add");
+                            oData.append("key", $("#x").val());
                             var oReq = new XMLHttpRequest();
                             oReq.open( "POST", "changePower" , true);
                             oReq.onload = function() {

@@ -49,6 +49,9 @@
     #main .sid{
         display: none;
     }
+    .View{
+        display: none;
+    }
 </style>
 </head>
 <body>
@@ -67,17 +70,20 @@
 
     </ul>
     <div class="upWindow"></div>
+
 </div>
+<div class="View"></div>
 <script type="text/javascript">
     var items = {{ tree|safe }};
     function new_li(item) {
         return '<li id="item_' + item.id + '" value="1" onselectstart="return false;">' +
                 '<div class="name">' + item.inf.templateName + '</div>' +
-                '<div class="category">[' + item.inf.templatePositions + ']</div>' +
+                '<div class="category">' + item.inf.templatePositions + '</div>' +
                 '<div class="pid">' + item.pid + '</div>' +
                 '<div class="sid">' + item.id + '</div>' +
                 '<div class="EquiType_but">' +
                 '<span class="add">增加子项</span> | ' +
+                '<span class="view">预览</span> | ' +
                 '<span class="change">修改</span> | ' +
                 '<span class="del">删除</span>' +
                 '</div>' +
@@ -188,6 +194,30 @@
                 }
             });
             getPage("EquipmentManage");
+        });
+    });
+    $.map($(".view"), function (x) {
+        $(x).click(function () {
+            var k = $(this).parent().prevAll(".category").text();
+            if (k == ""){
+                return ;
+            }
+            var fileUrl = k.split(".")[0] + ".html";
+            $.ajax({
+                cache: false,
+                type: "get",
+                url: "static/data/EquipmentType/" + fileUrl,
+                data: "",
+                async: false,
+                error: function () {
+                    alert('加载失败');
+                },
+                success: function (data) {
+                    $("#main").hide();
+                    $(".View").html(data).show();
+                }
+            });
+            return false;
         });
     });
 
